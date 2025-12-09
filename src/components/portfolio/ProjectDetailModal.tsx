@@ -424,12 +424,10 @@ export const ProjectDetailModal = ({ project, isOpen, onClose }: ProjectDetailMo
                   <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                     <Button
                       className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-semibold px-6"
-                      asChild
+                      onClick={() => window.open(project.githubUrl, '_blank', 'noopener,noreferrer')}
                     >
-                      <a href={project.githubUrl} target="_blank" rel="noopener noreferrer">
-                        <Github className="w-4 h-4 mr-2" />
-                        View Code
-                      </a>
+                      <Github className="w-4 h-4 mr-2" />
+                      View Code on GitHub
                     </Button>
                   </motion.div>
                   
@@ -438,12 +436,10 @@ export const ProjectDetailModal = ({ project, isOpen, onClose }: ProjectDetailMo
                       <Button
                         variant="outline"
                         className="border-amber-400/50 text-amber-300 hover:bg-amber-500/10 px-6"
-                        asChild
+                        onClick={() => window.open(project.liveUrl, '_blank', 'noopener,noreferrer')}
                       >
-                        <a href={project.liveUrl} target="_blank" rel="noopener noreferrer">
-                          <ExternalLink className="w-4 h-4 mr-2" />
-                          Live Demo
-                        </a>
+                        <ExternalLink className="w-4 h-4 mr-2" />
+                        Live Demo
                       </Button>
                     </motion.div>
                   )}

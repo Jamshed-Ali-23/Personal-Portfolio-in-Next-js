@@ -51,7 +51,7 @@ const ProjectCard = ({ project, index, delay, onViewDetails }: any) => {
             <h4 className="font-semibold text-stone-200">Technologies Used</h4>
           </div>
           <div className="flex flex-wrap gap-2 ml-9">
-            {project.techStack.slice(0, 4).map((tech: string, i: number) => (
+            {project.techStack.map((tech: string, i: number) => (
               <motion.div
                 key={tech}
                 initial={{ scale: 0 }}
@@ -64,11 +64,6 @@ const ProjectCard = ({ project, index, delay, onViewDetails }: any) => {
                 </Badge>
               </motion.div>
             ))}
-            {project.techStack.length > 4 && (
-              <Badge className="px-3 py-1.5 text-xs bg-stone-800 border border-stone-600 text-stone-400">
-                +{project.techStack.length - 4} more
-              </Badge>
-            )}
           </div>
         </div>
 
@@ -91,7 +86,11 @@ const ProjectCard = ({ project, index, delay, onViewDetails }: any) => {
             whileTap={{ scale: 0.98 }}
           >
             <Button
-              onClick={() => onViewDetails(project)}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                onViewDetails(project);
+              }}
               className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-semibold"
             >
               <Eye className="w-4 h-4 mr-2" />
@@ -110,12 +109,14 @@ const ProjectCard = ({ project, index, delay, onViewDetails }: any) => {
                 variant="ghost"
                 size="sm"
                 className="w-full text-amber-300 hover:text-amber-200 hover:bg-amber-500/15 border border-amber-400/20 hover:border-amber-400/40 transition-all"
-                asChild
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  window.open(project.githubUrl, '_blank', 'noopener,noreferrer');
+                }}
               >
-                <a href={project.githubUrl} target="_blank" rel="noopener noreferrer">
-                  <Github className="w-4 h-4 mr-2" />
-                  Code
-                </a>
+                <Github className="w-4 h-4 mr-2" />
+                Code
               </Button>
             </motion.div>
             {project.liveUrl && project.liveUrl !== "#" && (
@@ -128,12 +129,14 @@ const ProjectCard = ({ project, index, delay, onViewDetails }: any) => {
                   variant="ghost"
                   size="sm"
                   className="w-full text-amber-300 hover:text-amber-200 hover:bg-amber-500/15 border border-amber-400/20 hover:border-amber-400/40 transition-all"
-                  asChild
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    window.open(project.liveUrl, '_blank', 'noopener,noreferrer');
+                  }}
                 >
-                  <a href={project.liveUrl} target="_blank" rel="noopener noreferrer">
-                    <ExternalLink className="w-4 h-4 mr-2" />
-                    Demo
-                  </a>
+                  <ExternalLink className="w-4 h-4 mr-2" />
+                  Demo
                 </Button>
               </motion.div>
             )}
@@ -273,7 +276,7 @@ export const ProjectsSection = () => {
       ],
       demoVideo: "",
       githubUrl: "https://github.com/Jamshed-Ali-23/Sales-Dashboard-PowerBI",
-      liveUrl: "#"
+      liveUrl: "https://github.com/Jamshed-Ali-23/Sales-Dashboard-PowerBI"
     },
     {
       id: 4,
