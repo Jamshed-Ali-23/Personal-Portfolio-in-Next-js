@@ -14,10 +14,11 @@ const ProjectCard = ({ project, index, delay, onViewDetails }: any) => {
       whileHover={{ y: -8 }}
       transition={{ delay, duration: 0.5 }}
       className="group relative bg-gradient-to-br from-stone-900/90 to-stone-800/70 border border-amber-400/20 rounded-2xl overflow-hidden hover:border-amber-400/50 transition-all duration-300"
+      style={{ pointerEvents: 'auto' }}
     >
       {/* Header */}
-      <div className="bg-gradient-to-r from-amber-900/40 to-orange-900/40 border-b border-amber-400/20 px-6 py-5">
-        <div className="absolute inset-0 bg-gradient-to-r from-amber-500/10 to-orange-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+      <div className="bg-gradient-to-r from-amber-900/40 to-orange-900/40 border-b border-amber-400/20 px-6 py-5 relative">
+        <div className="absolute inset-0 bg-gradient-to-r from-amber-500/10 to-orange-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
         <h3 className="text-xl font-bold text-amber-300 relative z-10 flex items-center gap-2">
           <motion.span
             animate={{ rotate: [0, 10, -10, 0] }}
@@ -30,7 +31,7 @@ const ProjectCard = ({ project, index, delay, onViewDetails }: any) => {
       </div>
 
       {/* Content */}
-      <div className="p-6 space-y-5">
+      <div className="p-6 space-y-5 relative z-10">
         {/* Problem */}
         <div className="space-y-2">
           <div className="flex items-center gap-2">
@@ -79,66 +80,58 @@ const ProjectCard = ({ project, index, delay, onViewDetails }: any) => {
         </div>
 
         {/* Links */}
-        <div className="flex flex-col gap-3 pt-5 border-t border-amber-400/10">
+        <div className="flex flex-col gap-3 pt-5 border-t border-amber-400/10 relative z-30">
           {/* View Details Button - Primary Action */}
-          <motion.div
-            whileHover={{ scale: 1.02, y: -2 }}
-            whileTap={{ scale: 0.98 }}
+          <Button
+            type="button"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              console.log('View Details clicked for:', project.title);
+              onViewDetails(project);
+            }}
+            className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-semibold hover:scale-[1.02] active:scale-[0.98] transition-transform relative z-30 cursor-pointer"
+            style={{ pointerEvents: 'auto' }}
           >
+            <Eye className="w-4 h-4 mr-2" />
+            View Full Details
+          </Button>
+          
+          {/* Secondary Actions */}
+          <div className="flex gap-3 relative z-30">
             <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              className="flex-1 text-amber-300 hover:text-amber-200 hover:bg-amber-500/15 border border-amber-400/20 hover:border-amber-400/40 transition-all hover:scale-[1.05] active:scale-95 relative z-30 cursor-pointer"
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                onViewDetails(project);
+                console.log('Opening GitHub:', project.githubUrl);
+                window.open(project.githubUrl, '_blank', 'noopener,noreferrer');
               }}
-              className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-semibold"
+              style={{ pointerEvents: 'auto' }}
             >
-              <Eye className="w-4 h-4 mr-2" />
-              View Full Details
+              <Github className="w-4 h-4 mr-2" />
+              Code
             </Button>
-          </motion.div>
-          
-          {/* Secondary Actions */}
-          <div className="flex gap-3">
-            <motion.div
-              whileHover={{ scale: 1.05, y: -2 }}
-              whileTap={{ scale: 0.95 }}
-              className="flex-1"
-            >
+            {project.liveUrl && project.liveUrl !== "#" && (
               <Button
+                type="button"
                 variant="ghost"
                 size="sm"
-                className="w-full text-amber-300 hover:text-amber-200 hover:bg-amber-500/15 border border-amber-400/20 hover:border-amber-400/40 transition-all"
+                className="flex-1 text-amber-300 hover:text-amber-200 hover:bg-amber-500/15 border border-amber-400/20 hover:border-amber-400/40 transition-all hover:scale-[1.05] active:scale-95 relative z-30 cursor-pointer"
                 onClick={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
-                  window.open(project.githubUrl, '_blank', 'noopener,noreferrer');
+                  console.log('Opening Demo:', project.liveUrl);
+                  window.open(project.liveUrl, '_blank', 'noopener,noreferrer');
                 }}
+                style={{ pointerEvents: 'auto' }}
               >
-                <Github className="w-4 h-4 mr-2" />
-                Code
+                <ExternalLink className="w-4 h-4 mr-2" />
+                Demo
               </Button>
-            </motion.div>
-            {project.liveUrl && project.liveUrl !== "#" && (
-              <motion.div
-                whileHover={{ scale: 1.05, y: -2 }}
-                whileTap={{ scale: 0.95 }}
-                className="flex-1"
-              >
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="w-full text-amber-300 hover:text-amber-200 hover:bg-amber-500/15 border border-amber-400/20 hover:border-amber-400/40 transition-all"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    window.open(project.liveUrl, '_blank', 'noopener,noreferrer');
-                  }}
-                >
-                  <ExternalLink className="w-4 h-4 mr-2" />
-                  Demo
-                </Button>
-              </motion.div>
             )}
           </div>
         </div>
@@ -152,11 +145,14 @@ export const ProjectsSection = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleViewDetails = (project: any) => {
+    console.log('handleViewDetails called with project:', project.title);
     setSelectedProject(project);
     setIsModalOpen(true);
+    console.log('Modal should be open now');
   };
 
   const handleCloseModal = () => {
+    console.log('handleCloseModal called');
     setIsModalOpen(false);
     setSelectedProject(null);
   };
@@ -193,9 +189,13 @@ export const ProjectsSection = () => {
         "Positive user feedback on prediction accuracy"
       ],
       images: [
-        "/project-images/asia-cup-1.png",
-        "/project-images/asia-cup-2.png",
-        "/project-images/asia-cup-3.png"
+        "/project-images/Asia Cup/1.PNG",
+        "/project-images/Asia Cup/2.PNG",
+        "/project-images/Asia Cup/3.PNG",
+        "/project-images/Asia Cup/4.PNG",
+        "/project-images/Asia Cup/5.PNG",
+        "/project-images/Asia Cup/6.PNG",
+        "/project-images/Asia Cup/7.PNG"
       ],
       demoVideo: "",
       githubUrl: "https://github.com/Jamshed-Ali-23/Asia-Cup-2025-Predictor-Dashboard",
