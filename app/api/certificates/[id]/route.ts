@@ -17,7 +17,7 @@ export async function GET(request: Request, { params }: RouteParams) {
     }
     
     return NextResponse.json(certificate);
-  } catch (error) {
+  } catch (_error) {
     return NextResponse.json({ error: 'Failed to fetch certificate' }, { status: 500 });
   }
 }
@@ -38,7 +38,7 @@ export async function PUT(request: Request, { params }: RouteParams) {
     }
     
     return NextResponse.json(certificate);
-  } catch (error) {
+  } catch (_error) {
     return NextResponse.json({ error: 'Failed to update certificate' }, { status: 500 });
   }
 }
@@ -54,7 +54,7 @@ export async function DELETE(request: Request, { params }: RouteParams) {
     }
     
     return NextResponse.json({ message: 'Certificate deleted successfully' });
-  } catch (error) {
+  } catch (_error) {
     return NextResponse.json({ error: 'Failed to delete certificate' }, { status: 500 });
   }
 }

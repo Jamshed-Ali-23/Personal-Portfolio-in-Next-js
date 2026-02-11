@@ -20,7 +20,7 @@ export default function NotFound() {
 
         {/* Message */}
         <p className="mt-8 text-stone-400 text-lg max-w-md mx-auto">
-          Oops! The page you're looking for doesn't exist or has been moved.
+          Oops! The page you&apos;re looking for doesn&apos;t exist or has been moved.
         </p>
 
         {/* Actions */}

@@ -274,7 +274,7 @@ export default function AboutSection({ profile, experiences }: AboutSectionProps
           </div>
 
           {/* Stats Grid */}
-          <motion.div variants={itemVariants} className="grid grid-cols-3 gap-4 mt-12">
+          <motion.div variants={itemVariants} className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4 mt-12">
             <StatCard
               icon={Target}
               value={`${stats.projectsCompleted}+`}

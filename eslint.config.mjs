@@ -10,13 +10,20 @@ const compat = new FlatCompat({
 });
 
 const eslintConfig = [
-  ...compat.extends("next/core-web-vitals"),
   {
+    ignores: [".next/**"],
+  },
+  ...compat.extends("next/core-web-vitals", "next/typescript"),
+  ...compat.config({
     rules: {
       "@typescript-eslint/no-explicit-any": "off",
-      "@typescript-eslint/no-unused-vars": "warn",
+      "@typescript-eslint/no-unused-vars": ["warn", { argsIgnorePattern: "^_", caughtErrorsIgnorePattern: "^_" }],
+      "@typescript-eslint/no-empty-object-type": "off",
+      "@typescript-eslint/no-require-imports": "off",
+      "@typescript-eslint/triple-slash-reference": "off",
+      "import/no-anonymous-default-export": "off",
     },
-  },
+  }),
 ];
 
 export default eslintConfig;

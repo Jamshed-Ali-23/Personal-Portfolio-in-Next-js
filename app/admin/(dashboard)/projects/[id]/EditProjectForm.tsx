@@ -79,7 +79,7 @@ export default function EditProjectForm({ project }: { project: Project }) {
       });
       router.push('/admin/projects');
       router.refresh();
-    } catch (error) {
+    } catch (_error) {
       toast({
         title: 'Error',
         description: 'Failed to update project',
@@ -153,13 +153,16 @@ export default function EditProjectForm({ project }: { project: Project }) {
             </div>
             <div className="space-y-2">
               <Label className="text-stone-300">Category</Label>
-              <Input
+              <select
                 value={formData.category}
                 onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                placeholder="Machine Learning / Data Analytics / Web Development"
                 required
-                className="bg-stone-800 border-stone-700 text-stone-100"
-              />
+                className="w-full rounded-md bg-stone-800 border border-stone-700 text-stone-100 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/50"
+              >
+                <option value="Machine Learning">Machine Learning</option>
+                <option value="Data Analytics">Data Analytics</option>
+                <option value="Web Development">Web Development</option>
+              </select>
             </div>
           </CardContent>
         </Card>

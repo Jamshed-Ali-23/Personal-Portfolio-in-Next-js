@@ -26,7 +26,7 @@ const ProjectSchema = new Schema<IProject>(
   {
     title: { type: String, required: true },
     icon: { type: String, default: '📊' },
-    category: { type: String, required: true },
+    category: { type: String, required: true, enum: ['Machine Learning', 'Data Analytics', 'Web Development'] },
     duration: String,
     problem: { type: String, required: true },
     solution: { type: String, required: true },

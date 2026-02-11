@@ -196,14 +196,14 @@ export default function SkillsSection({ skillCategories }: SkillsSectionProps) {
           </div>
 
           {/* Skill Categories Grid */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
             {skillCategories.map((category, index) => (
               <CategoryCard key={category._id} category={category} index={index} />
             ))}
           </div>
 
           {/* Stats Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-16">
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mb-16">
             <StatCard icon={Database} value={`${totalSkills}+`} label="Technologies" delay={0.1} />
             <StatCard icon={Brain} value={`${skillCategories.length}`} label="Skill Categories" delay={0.2} />
             <StatCard icon={Target} value="95%" label="Project Success" delay={0.3} />
@@ -218,7 +218,7 @@ export default function SkillsSection({ skillCategories }: SkillsSectionProps) {
             className="bg-stone-900/30 border border-stone-800 rounded-2xl p-8"
           >
             <h3 className="text-xl font-semibold text-white mb-6 text-center">What Sets Me Apart</h3>
-            <div className="grid md:grid-cols-2 gap-4">
+            <div className="grid sm:grid-cols-2 gap-4">
               <StrengthCard
                 icon={Target}
                 title="Problem-Solving Mindset"

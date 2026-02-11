@@ -95,7 +95,7 @@ export default async function Home() {
             © {new Date().getFullYear()} {profile?.name || 'Portfolio'}. All rights reserved.
           </p>
           <p className="text-stone-600 text-xs mt-2">
-            Built with Next.js, TypeScript, and MongoDB
+            Built with Next.js, React, TypeScript &amp; MongoDB
           </p>
         </div>
       </footer>

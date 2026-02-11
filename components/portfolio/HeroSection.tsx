@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useRef } from 'react';
 import { motion, useScroll, useTransform, useSpring, useMotionValue } from 'framer-motion';
+import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { ChevronDown, ArrowRight, Download, Github, Linkedin, Mail, Database, BarChart3, Brain, Code2 } from 'lucide-react';
 
@@ -169,7 +170,7 @@ export default function HeroSection({ profile }: HeroSectionProps) {
                 transition={{ delay: 0.3, duration: 0.6 }}
                 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold"
               >
-                <span className="text-white">Hi, I'm </span>
+                <span className="text-white">Hi, I&apos;m </span>
                 <span className="bg-gradient-to-r from-amber-400 via-orange-400 to-rose-500 bg-clip-text text-transparent">
                   {name}
                 </span>
@@ -179,7 +180,7 @@ export default function HeroSection({ profile }: HeroSectionProps) {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.5 }}
-                className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-slate-300 h-8 sm:h-10"
+                className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-slate-300 h-8 sm:h-10 overflow-hidden"
               >
                 {text}
                 <motion.span
@@ -199,8 +200,8 @@ export default function HeroSection({ profile }: HeroSectionProps) {
             >
               I transform complex data into actionable insights. Specializing in
               <span className="text-amber-400 font-medium"> Python, Power BI, SQL</span>, and
-              <span className="text-amber-400 font-medium"> Machine Learning</span> with a unique edge in
-              building interactive dashboards.
+              <span className="text-amber-400 font-medium"> Machine Learning</span> — with a frontend edge in
+              <span className="text-amber-400 font-medium"> React &amp; Next.js</span> for building interactive dashboards and web apps.
             </motion.p>
 
             {/* Tech Stack */}
@@ -213,7 +214,7 @@ export default function HeroSection({ profile }: HeroSectionProps) {
               <TechBadge icon={Database} label="SQL & Python" delay={0.8} />
               <TechBadge icon={BarChart3} label="Power BI" delay={0.9} />
               <TechBadge icon={Brain} label="Machine Learning" delay={1.0} />
-              <TechBadge icon={Code2} label="React & Streamlit" delay={1.1} />
+              <TechBadge icon={Code2} label="React & Next.js" delay={1.1} />
             </motion.div>
 
             {/* CTA Buttons */}
@@ -305,10 +306,11 @@ export default function HeroSection({ profile }: HeroSectionProps) {
 
               {/* Image Container */}
               <div className="relative w-56 h-56 sm:w-64 sm:h-64 md:w-72 md:h-72 lg:w-80 lg:h-80 rounded-full overflow-hidden border-4 border-stone-800 shadow-2xl shadow-amber-500/20">
-                <img
+                <Image
                   src="/images/profile.jpg"
                   alt={name}
-                  className="w-full h-full object-cover object-center scale-110"
+                  fill
+                  className="object-cover object-center scale-110"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-stone-950/60 via-transparent to-transparent" />
               </div>
@@ -339,6 +341,15 @@ export default function HeroSection({ profile }: HeroSectionProps) {
               >
                 <span className="text-2xl">🤖</span>
                 <span className="ml-2 text-sm font-medium text-rose-400">ML</span>
+              </motion.div>
+
+              <motion.div
+                className="hidden sm:block absolute bottom-8 -left-6 px-4 py-2 bg-stone-900 border border-cyan-500/30 rounded-xl shadow-lg"
+                animate={{ y: [0, -10, 0], rotate: [0, -3, 0] }}
+                transition={{ duration: 4, repeat: Infinity, delay: 2 }}
+              >
+                <span className="text-2xl">⚛️</span>
+                <span className="ml-2 text-sm font-medium text-cyan-400">React</span>
               </motion.div>
             </motion.div>
 

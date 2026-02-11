@@ -7,7 +7,7 @@ export async function GET() {
     await connectDB();
     const experiences = await Experience.find().sort({ isCurrent: -1, order: 1 });
     return NextResponse.json(experiences);
-  } catch (error) {
+  } catch (_error) {
     return NextResponse.json({ error: 'Failed to fetch experiences' }, { status: 500 });
   }
 }
@@ -18,7 +18,7 @@ export async function POST(request: Request) {
     const data = await request.json();
     const experience = await Experience.create(data);
     return NextResponse.json(experience, { status: 201 });
-  } catch (error) {
+  } catch (_error) {
     return NextResponse.json({ error: 'Failed to create experience' }, { status: 500 });
   }
 }

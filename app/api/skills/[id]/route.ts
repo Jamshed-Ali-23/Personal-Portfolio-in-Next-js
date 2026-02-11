@@ -17,7 +17,7 @@ export async function GET(request: Request, { params }: RouteParams) {
     }
     
     return NextResponse.json(skill);
-  } catch (error) {
+  } catch (_error) {
     return NextResponse.json({ error: 'Failed to fetch skill category' }, { status: 500 });
   }
 }
@@ -38,7 +38,7 @@ export async function PUT(request: Request, { params }: RouteParams) {
     }
     
     return NextResponse.json(skill);
-  } catch (error) {
+  } catch (_error) {
     return NextResponse.json({ error: 'Failed to update skill category' }, { status: 500 });
   }
 }
@@ -54,7 +54,7 @@ export async function DELETE(request: Request, { params }: RouteParams) {
     }
     
     return NextResponse.json({ message: 'Skill category deleted successfully' });
-  } catch (error) {
+  } catch (_error) {
     return NextResponse.json({ error: 'Failed to delete skill category' }, { status: 500 });
   }
 }

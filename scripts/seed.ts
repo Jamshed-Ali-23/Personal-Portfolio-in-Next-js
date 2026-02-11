@@ -54,7 +54,7 @@ async function seed() {
     await Profile.create({
       name: 'Jamshed Ali',
       title: 'Data Scientist & Analytics Expert',
-      bio: 'A passionate Data Science student combining analytical expertise with modern web development skills. I transform complex data into actionable insights using Python, Power BI, SQL, and Machine Learning, with a unique edge in building interactive dashboards and web applications.',
+      bio: 'A passionate Data Science student combining analytical expertise with modern web development skills. I transform complex data into actionable insights using Python, Power BI, SQL, and Machine Learning — with a frontend edge in React & Next.js for building interactive dashboards and web applications.',
       email: 'jamshedsaiin@gmail.com',
       location: 'Islamabad, Pakistan',
       socialLinks: {
@@ -143,7 +143,7 @@ async function seed() {
       },
       {
         title: 'Retail Insights Dashboard',
-        category: 'Business Intelligence',
+        category: 'Data Analytics',
         icon: 'BarChart3',
         problem: 'Retail managers needed real-time visibility into sales performance, inventory levels, and customer trends.',
         solution: 'Created an interactive Power BI dashboard with drill-down capabilities, automated data refresh, and KPI tracking for comprehensive retail analytics.',
@@ -230,7 +230,7 @@ async function seed() {
       },
       {
         title: 'Multivariable Calculus Visualizer',
-        category: 'Education',
+        category: 'Web Development',
         icon: 'Code2',
         problem: 'Students struggle to visualize and understand 3D mathematical concepts in multivariable calculus courses.',
         solution: 'Created an interactive web application for visualizing 3D surfaces, vector fields, and calculus operations with intuitive controls.',

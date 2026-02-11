@@ -59,7 +59,7 @@ export default function EditSkillForm({ category }: { category: SkillCategory })
       });
       router.push('/admin/skills');
       router.refresh();
-    } catch (error) {
+    } catch (_error) {
       toast({
         title: 'Error',
         description: 'Failed to update skill category',

@@ -7,7 +7,7 @@ export async function GET() {
     await connectDB();
     const skills = await SkillCategory.find().sort({ order: 1 });
     return NextResponse.json(skills);
-  } catch (error) {
+  } catch (_error) {
     return NextResponse.json({ error: 'Failed to fetch skills' }, { status: 500 });
   }
 }
@@ -18,7 +18,7 @@ export async function POST(request: Request) {
     const data = await request.json();
     const skill = await SkillCategory.create(data);
     return NextResponse.json(skill, { status: 201 });
-  } catch (error) {
+  } catch (_error) {
     return NextResponse.json({ error: 'Failed to create skill category' }, { status: 500 });
   }
 }

@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import Image from 'next/image';
 import { ExternalLink, Github, ChevronRight, TrendingUp, BarChart3, Brain, Code2, Database, PieChart } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -62,10 +63,11 @@ const ProjectCard = ({
         {/* Project Image */}
         {project.images && project.images.length > 0 && (
           <div className="relative h-48 overflow-hidden">
-            <img
+            <Image
               src={project.images[0]}
               alt={project.title}
-              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+              fill
+              className="object-cover transition-transform duration-500 group-hover:scale-110"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-stone-900 to-transparent" />
             <div className="absolute top-4 left-4">
@@ -230,7 +232,7 @@ export default function ProjectsSection({ projects }: ProjectsSectionProps) {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="grid md:grid-cols-2 lg:grid-cols-3 gap-6"
+              className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6"
             >
               {filteredProjects.map((project, index) => (
                 <ProjectCard

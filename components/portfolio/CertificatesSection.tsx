@@ -201,19 +201,21 @@ export default function CertificatesSection({ certificates }: CertificatesSectio
             viewport={{ once: true }}
             className="mt-16 text-center"
           >
-            <div className="inline-flex items-center gap-8 p-6 bg-stone-900/50 border border-stone-800 rounded-2xl">
+            <div className="flex flex-col sm:flex-row items-center gap-6 sm:gap-8 p-6 bg-stone-900/50 border border-stone-800 rounded-2xl">
               <div className="text-center">
                 <div className="text-3xl font-bold text-amber-400">{certificates.length}</div>
                 <div className="text-sm text-stone-400">Certifications</div>
               </div>
-              <div className="w-px h-12 bg-stone-700" />
+              <div className="hidden sm:block w-px h-12 bg-stone-700" />
+              <div className="w-16 h-px sm:hidden bg-stone-700" />
               <div className="text-center">
                 <div className="text-3xl font-bold text-green-400">
                   {new Set(certificates.map((c) => c.platform)).size}
                 </div>
                 <div className="text-sm text-stone-400">Platforms</div>
               </div>
-              <div className="w-px h-12 bg-stone-700" />
+              <div className="hidden sm:block w-px h-12 bg-stone-700" />
+              <div className="w-16 h-px sm:hidden bg-stone-700" />
               <div className="text-center">
                 <div className="text-3xl font-bold text-blue-400">Active</div>
                 <div className="text-sm text-stone-400">Status</div>

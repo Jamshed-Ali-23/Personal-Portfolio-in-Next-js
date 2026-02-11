@@ -17,7 +17,7 @@ export async function GET(request: Request, { params }: RouteParams) {
     }
     
     return NextResponse.json(experience);
-  } catch (error) {
+  } catch (_error) {
     return NextResponse.json({ error: 'Failed to fetch experience' }, { status: 500 });
   }
 }
@@ -38,7 +38,7 @@ export async function PUT(request: Request, { params }: RouteParams) {
     }
     
     return NextResponse.json(experience);
-  } catch (error) {
+  } catch (_error) {
     return NextResponse.json({ error: 'Failed to update experience' }, { status: 500 });
   }
 }
@@ -54,7 +54,7 @@ export async function DELETE(request: Request, { params }: RouteParams) {
     }
     
     return NextResponse.json({ message: 'Experience deleted successfully' });
-  } catch (error) {
+  } catch (_error) {
     return NextResponse.json({ error: 'Failed to delete experience' }, { status: 500 });
   }
 }

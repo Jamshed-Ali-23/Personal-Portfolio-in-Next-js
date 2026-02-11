@@ -57,7 +57,7 @@ export default function NewCertificatePage() {
       });
       router.push('/admin/certificates');
       router.refresh();
-    } catch (error) {
+    } catch (_error) {
       toast({
         title: 'Error',
         description: 'Failed to create certificate',

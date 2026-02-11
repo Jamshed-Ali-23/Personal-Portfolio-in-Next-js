@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Plus, Edit, ExternalLink, Github, Eye, EyeOff } from 'lucide-react';
+import { Plus, Edit, ExternalLink, Github, EyeOff } from 'lucide-react';
 import connectDB from '@/lib/mongodb';
 import Project from '@/models/Project';
 import DeleteButton from '@/components/admin/DeleteButton';

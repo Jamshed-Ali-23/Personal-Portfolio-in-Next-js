@@ -2,6 +2,7 @@
 
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, ExternalLink, Github, CheckCircle2, Target, Lightbulb, AlertTriangle, TrendingUp, ChevronLeft, ChevronRight } from 'lucide-react';
+import Image from 'next/image';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
@@ -61,7 +62,7 @@ export default function ProjectDetailModal({ project, onClose }: ProjectDetailMo
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            className="fixed inset-4 md:inset-8 lg:inset-12 z-50 overflow-hidden"
+            className="fixed inset-2 sm:inset-4 md:inset-8 lg:inset-12 z-50 overflow-hidden"
           >
             <div className="h-full bg-stone-900 border border-stone-800 rounded-2xl overflow-hidden flex flex-col">
               {/* Header */}
@@ -110,10 +111,11 @@ export default function ProjectDetailModal({ project, onClose }: ProjectDetailMo
                   {/* Image Carousel */}
                   {project.images && project.images.length > 0 && (
                     <div className="relative aspect-video rounded-xl overflow-hidden bg-stone-800">
-                      <img
+                      <Image
                         src={project.images[currentImageIndex]}
                         alt={`${project.title} screenshot ${currentImageIndex + 1}`}
-                        className="w-full h-full object-cover"
+                        fill
+                        className="object-cover"
                       />
                       {project.images.length > 1 && (
                         <>

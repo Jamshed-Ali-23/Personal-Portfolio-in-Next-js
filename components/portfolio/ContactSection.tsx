@@ -126,19 +126,19 @@ export default function ContactSection({ profile }: ContactSectionProps) {
               Get In Touch
             </Badge>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4">
-              Let's Work
+              Let&apos;s Work
               <span className="block bg-gradient-to-r from-amber-400 to-orange-500 bg-clip-text text-transparent">
                 Together
               </span>
             </h2>
             <p className="text-stone-400 max-w-2xl mx-auto">
-              I'm currently open to new opportunities and collaborations. Whether you have a project in
+              I&apos;m currently open to new opportunities and collaborations. Whether you have a project in
               mind or just want to chat, feel free to reach out!
             </p>
           </div>
 
           {/* Info Cards */}
-          <div className="grid sm:grid-cols-3 gap-4 mb-12">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-12">
             <InfoCard icon={Send} title="Quick Response" value="Within 24 hours" delay={0.1} />
             <InfoCard
               icon={MapPin}
@@ -214,7 +214,7 @@ export default function ContactSection({ profile }: ContactSectionProps) {
             className="text-center mt-16 pt-16 border-t border-stone-800"
           >
             <p className="text-stone-400">
-              Thanks for visiting my portfolio! Let's create something amazing together.
+              Thanks for visiting my portfolio! Let&apos;s create something amazing together.
             </p>
             <div className="mt-6 flex items-center justify-center gap-4 text-2xl">
               <span>🚀</span>

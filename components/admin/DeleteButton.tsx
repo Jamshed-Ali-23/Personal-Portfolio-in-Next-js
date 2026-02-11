@@ -50,7 +50,7 @@ export default function DeleteButton({ id, endpoint, itemName, redirectPath }: D
         router.push(redirectPath);
       }
       router.refresh();
-    } catch (error) {
+    } catch (_error) {
       toast({
         title: 'Error',
         description: `Failed to delete ${itemName.toLowerCase()}.`,

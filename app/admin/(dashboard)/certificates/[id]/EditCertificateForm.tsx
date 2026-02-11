@@ -59,7 +59,7 @@ export default function EditCertificateForm({ certificate }: { certificate: Cert
       });
       router.push('/admin/certificates');
       router.refresh();
-    } catch (error) {
+    } catch (_error) {
       toast({
         title: 'Error',
         description: 'Failed to update certificate',
