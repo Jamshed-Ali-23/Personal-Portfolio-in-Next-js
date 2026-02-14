@@ -21,9 +21,10 @@ export const revalidate = 0;
 // Fetch all portfolio data
 async function getPortfolioData() {
   try {
+    console.log('[Portfolio] Fetching data... MONGODB_URI set:', !!process.env.MONGODB_URI);
     const db = await connectDB();
     if (!db) {
-      console.warn('⚠ No database connection - using empty data');
+      console.error('[Portfolio] ✗ No database connection - MONGODB_URI:', process.env.MONGODB_URI ? 'SET' : 'NOT SET');
       return {
         profile: null,
         projects: [],
@@ -33,6 +34,8 @@ async function getPortfolioData() {
       };
     }
 
+    console.log('[Portfolio] ✓ Connected to MongoDB, querying data...');
+
     const [profile, projects, skillCategories, certificates, experiences] = await Promise.all([
       Profile.findOne().lean(),
       Project.find({ isVisible: true }).sort({ order: 1, createdAt: -1 }).lean(),
@@ -40,6 +43,8 @@ async function getPortfolioData() {
       Certificate.find({ isVisible: true }).sort({ order: 1, createdAt: -1 }).lean(),
       Experience.find({ isVisible: true }).sort({ order: 1, startDate: -1 }).lean(),
     ]);
+
+    console.log(`[Portfolio] ✓ Data fetched - Profile: ${!!profile}, Projects: ${projects.length}, Skills: ${skillCategories.length}, Certs: ${certificates.length}, Exp: ${experiences.length}`);
 
     return {
       profile: profile ? JSON.parse(JSON.stringify(profile)) : null,
@@ -49,7 +54,7 @@ async function getPortfolioData() {
       experiences: JSON.parse(JSON.stringify(experiences)),
     };
   } catch (error) {
-    console.error('Error fetching portfolio data:', error);
+    console.error('[Portfolio] ✗ Error fetching data:', error);
     return {
       profile: null,
       projects: [],
