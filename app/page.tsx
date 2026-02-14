@@ -89,14 +89,22 @@ export default async function Home() {
       </Suspense>
 
       {/* Footer */}
-      <footer className="py-8 border-t border-stone-800">
-        <div className="container mx-auto px-4 text-center">
-          <p className="text-stone-500 text-sm">
-            © {new Date().getFullYear()} {profile?.name || 'Portfolio'}. All rights reserved.
-          </p>
-          <p className="text-stone-600 text-xs mt-2">
-            Built with Next.js, React, TypeScript &amp; MongoDB
-          </p>
+      <footer className="relative py-10 border-t border-stone-800/50">
+        <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-stone-700/50 to-transparent" />
+        <div className="container mx-auto px-4 sm:px-6">
+          <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="flex items-center gap-2">
+              <div className="w-6 h-6 rounded-md bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center">
+                <span className="text-[10px] font-bold text-white">JA</span>
+              </div>
+              <span className="text-stone-400 text-sm font-medium">
+                © {new Date().getFullYear()} {profile?.name || 'Portfolio'}
+              </span>
+            </div>
+            <p className="text-stone-600 text-xs">
+              Crafted with Next.js, React, TypeScript &amp; MongoDB
+            </p>
+          </div>
         </div>
       </footer>
     </main>

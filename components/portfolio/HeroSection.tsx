@@ -4,7 +4,7 @@ import { useEffect, useState, useRef } from 'react';
 import { motion, useScroll, useTransform, useSpring, useMotionValue } from 'framer-motion';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
-import { ChevronDown, ArrowRight, Download, Github, Linkedin, Mail, Database, BarChart3, Brain, Code2 } from 'lucide-react';
+import { ChevronDown, ArrowRight, Download, Github, Linkedin, Mail, Database, BarChart3, Brain, Code2, Sparkles } from 'lucide-react';
 
 interface Profile {
   name: string;
@@ -26,7 +26,7 @@ interface Profile {
 // Animated Background Grid
 const GridBackground = () => (
   <div className="absolute inset-0 -z-10">
-    <div className="absolute inset-0 bg-[linear-gradient(to_right,#d9731510_1px,transparent_1px),linear-gradient(to_bottom,#d9731510_1px,transparent_1px)] bg-[size:60px_60px]" />
+    <div className="absolute inset-0 bg-[linear-gradient(to_right,#d9731508_1px,transparent_1px),linear-gradient(to_bottom,#d9731508_1px,transparent_1px)] bg-[size:80px_80px]" />
     <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-stone-950" />
   </div>
 );
@@ -49,34 +49,67 @@ const FloatingOrb = ({ className, delay = 0 }: { className: string; delay?: numb
   />
 );
 
-// Tech Badge Component
+// Tech Badge
 const TechBadge = ({ icon: Icon, label, delay }: { icon: React.ElementType; label: string; delay: number }) => (
   <motion.div
     initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}
     transition={{ delay, duration: 0.5 }}
-    whileHover={{ scale: 1.05, y: -5 }}
-    className="flex items-center gap-2 px-4 py-2 bg-stone-800/50 border border-stone-700/50 rounded-full backdrop-blur-sm"
+    whileHover={{ scale: 1.05, y: -3 }}
+    className="flex items-center gap-2 px-4 py-2 bg-stone-800/40 border border-stone-700/40 rounded-full backdrop-blur-sm hover:border-amber-500/30 hover:bg-stone-800/60 transition-all duration-300"
   >
     <Icon className="w-4 h-4 text-amber-400" />
-    <span className="text-sm text-stone-300">{label}</span>
+    <span className="text-sm text-stone-300 font-medium">{label}</span>
   </motion.div>
 );
 
-// Stat Card
-const StatCard = ({ value, label, delay }: { value: string; label: string; delay: number }) => (
-  <motion.div
-    initial={{ opacity: 0, scale: 0.8 }}
-    animate={{ opacity: 1, scale: 1 }}
-    transition={{ delay, duration: 0.5, type: 'spring' }}
-    className="text-center"
-  >
-    <div className="text-2xl sm:text-3xl md:text-4xl font-bold bg-gradient-to-r from-amber-400 to-orange-500 bg-clip-text text-transparent">
-      {value}
-    </div>
-    <div className="text-xs sm:text-sm text-stone-400 mt-1">{label}</div>
-  </motion.div>
-);
+// Animated counter
+const AnimatedCounter = ({ target, label, delay }: { target: number; label: string; delay: number }) => {
+  const [count, setCount] = useState(0);
+  const [hasAnimated, setHasAnimated] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !hasAnimated) {
+          setHasAnimated(true);
+          let start = 0;
+          const duration = 1500;
+          const startTime = performance.now();
+          const animate = (currentTime: number) => {
+            const elapsed = currentTime - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            // ease-out
+            const eased = 1 - Math.pow(1 - progress, 3);
+            start = Math.floor(eased * target);
+            setCount(start);
+            if (progress < 1) requestAnimationFrame(animate);
+          };
+          requestAnimationFrame(animate);
+        }
+      },
+      { threshold: 0.5 }
+    );
+    if (ref.current) observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, [target, hasAnimated]);
+
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, scale: 0.8 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ delay, duration: 0.5, type: 'spring' }}
+      className="text-center group"
+    >
+      <div className="text-2xl sm:text-3xl md:text-4xl font-bold bg-gradient-to-r from-amber-400 to-orange-500 bg-clip-text text-transparent">
+        {count}+
+      </div>
+      <div className="text-xs sm:text-sm text-stone-500 mt-1 font-medium">{label}</div>
+    </motion.div>
+  );
+};
 
 interface HeroSectionProps {
   profile: Profile | null;
@@ -120,7 +153,7 @@ export default function HeroSection({ profile }: HeroSectionProps) {
   };
 
   const name = profile?.name || 'Jamshed Ali';
-  const stats = profile?.stats || { projectsCompleted: 6, certificationsEarned: 6, technologiesMastered: 18 };
+  const stats = profile?.stats || { projectsCompleted: 12, certificationsEarned: 6, technologiesMastered: 25 };
 
   return (
     <section
@@ -131,35 +164,35 @@ export default function HeroSection({ profile }: HeroSectionProps) {
     >
       {/* Background Effects */}
       <GridBackground />
-      <FloatingOrb className="w-[600px] h-[600px] bg-amber-500/20 top-[-200px] left-[-200px]" delay={0} />
-      <FloatingOrb className="w-[500px] h-[500px] bg-orange-500/15 bottom-[-150px] right-[-150px]" delay={2} />
-      <FloatingOrb className="w-[300px] h-[300px] bg-rose-500/10 top-[40%] right-[10%]" delay={4} />
+      <FloatingOrb className="w-[600px] h-[600px] bg-amber-500/15 top-[-200px] left-[-200px]" delay={0} />
+      <FloatingOrb className="w-[400px] h-[400px] bg-orange-500/10 bottom-[-150px] right-[-150px]" delay={2} />
+      <FloatingOrb className="w-[250px] h-[250px] bg-rose-500/8 top-[40%] right-[10%]" delay={4} />
 
       {/* Main Content */}
       <motion.div
-        className="container mx-auto px-4 sm:px-6 py-16 sm:py-20 relative z-10"
+        className="container mx-auto px-4 sm:px-6 py-12 sm:py-16 md:py-20 relative z-10"
         style={{ y, opacity }}
       >
-        <div className="grid lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-20 items-center max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 sm:gap-12 lg:gap-20 items-center max-w-7xl mx-auto">
           {/* Left Content */}
           <motion.div
             initial={{ opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8 }}
-            className="space-y-8"
+            className="space-y-5 sm:space-y-7 text-center lg:text-left"
           >
             {/* Status Badge */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="inline-flex items-center gap-2 px-4 py-2 bg-amber-500/10 border border-amber-500/20 rounded-full"
+              className="inline-flex items-center gap-2.5 px-4 py-2 bg-gradient-to-r from-amber-500/10 to-orange-500/5 border border-amber-500/20 rounded-full"
             >
               <span className="relative flex h-2 w-2">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
               </span>
-              <span className="text-sm text-amber-300">Available for opportunities</span>
+              <span className="text-sm text-amber-300/90 font-medium">Available for opportunities</span>
             </motion.div>
 
             {/* Name & Title */}
@@ -168,7 +201,7 @@ export default function HeroSection({ profile }: HeroSectionProps) {
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3, duration: 0.6 }}
-                className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold"
+                className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold leading-[1.1]"
               >
                 <span className="text-white">Hi, I&apos;m </span>
                 <span className="bg-gradient-to-r from-amber-400 via-orange-400 to-rose-500 bg-clip-text text-transparent">
@@ -180,13 +213,13 @@ export default function HeroSection({ profile }: HeroSectionProps) {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.5 }}
-                className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-slate-300 h-8 sm:h-10 overflow-hidden"
+                className="text-base sm:text-xl md:text-2xl lg:text-3xl text-stone-300 h-8 sm:h-10 overflow-hidden"
               >
                 {text}
                 <motion.span
                   animate={{ opacity: [1, 0] }}
                   transition={{ duration: 0.5, repeat: Infinity }}
-                  className="inline-block w-[3px] h-8 bg-cyan-400 ml-1 align-middle"
+                  className="inline-block w-[3px] h-7 sm:h-8 bg-amber-400 ml-1 align-middle"
                 />
               </motion.div>
             </div>
@@ -209,7 +242,7 @@ export default function HeroSection({ profile }: HeroSectionProps) {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.7 }}
-              className="flex flex-wrap gap-3"
+              className="flex flex-wrap gap-2 sm:gap-2.5 justify-center lg:justify-start"
             >
               <TechBadge icon={Database} label="SQL & Python" delay={0.8} />
               <TechBadge icon={BarChart3} label="Power BI" delay={0.9} />
@@ -222,13 +255,14 @@ export default function HeroSection({ profile }: HeroSectionProps) {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.8 }}
-              className="flex flex-wrap gap-4 pt-4"
+              className="flex flex-col xs:flex-row flex-wrap gap-3 sm:gap-4 pt-2"
             >
               <Button
                 size="lg"
                 onClick={() => scrollToSection('projects')}
-                className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-semibold px-8"
+                className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-semibold px-8 shadow-lg shadow-amber-500/20 hover:shadow-amber-500/30 transition-all"
               >
+                <Sparkles className="mr-2 w-4 h-4" />
                 View Projects
                 <ArrowRight className="ml-2 w-4 h-4" />
               </Button>
@@ -236,7 +270,7 @@ export default function HeroSection({ profile }: HeroSectionProps) {
               <Button
                 size="lg"
                 variant="outline"
-                className="border-amber-500/50 text-amber-400 hover:bg-amber-500/10"
+                className="border-stone-700 text-stone-300 hover:text-amber-400 hover:border-amber-500/50 hover:bg-amber-500/5 transition-all"
                 onClick={() => {
                   const link = document.createElement('a');
                   link.href = '/Resume/Jamshed_Ali_Resume.pdf';
@@ -254,14 +288,14 @@ export default function HeroSection({ profile }: HeroSectionProps) {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.9 }}
-              className="flex gap-4 pt-4"
+              className="flex gap-3 pt-2 justify-center sm:justify-start"
             >
               {profile?.socialLinks?.github && (
                 <a
                   href={profile.socialLinks.github}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-3 rounded-full bg-stone-800/50 border border-stone-700/50 text-stone-400 hover:text-amber-400 hover:border-amber-500/50 transition-colors"
+                  className="p-2.5 rounded-xl bg-stone-800/40 border border-stone-700/40 text-stone-400 hover:text-white hover:border-stone-600 hover:bg-stone-800/70 transition-all duration-300"
                 >
                   <Github className="w-5 h-5" />
                 </a>
@@ -271,7 +305,7 @@ export default function HeroSection({ profile }: HeroSectionProps) {
                   href={profile.socialLinks.linkedin}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-3 rounded-full bg-stone-800/50 border border-stone-700/50 text-stone-400 hover:text-amber-400 hover:border-amber-500/50 transition-colors"
+                  className="p-2.5 rounded-xl bg-stone-800/40 border border-stone-700/40 text-stone-400 hover:text-blue-400 hover:border-blue-500/30 hover:bg-blue-500/5 transition-all duration-300"
                 >
                   <Linkedin className="w-5 h-5" />
                 </a>
@@ -279,7 +313,7 @@ export default function HeroSection({ profile }: HeroSectionProps) {
               {profile?.socialLinks?.email && (
                 <a
                   href={`mailto:${profile.socialLinks.email}`}
-                  className="p-3 rounded-full bg-stone-800/50 border border-stone-700/50 text-stone-400 hover:text-amber-400 hover:border-amber-500/50 transition-colors"
+                  className="p-2.5 rounded-xl bg-stone-800/40 border border-stone-700/40 text-stone-400 hover:text-amber-400 hover:border-amber-500/30 hover:bg-amber-500/5 transition-all duration-300"
                 >
                   <Mail className="w-5 h-5" />
                 </a>
@@ -287,77 +321,83 @@ export default function HeroSection({ profile }: HeroSectionProps) {
             </motion.div>
           </motion.div>
 
-          {/* Right Content - Profile Image + Stats */}
+          {/* Right Content — Profile Image + Stats */}
           <motion.div
             initial={{ opacity: 0, x: 50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, delay: 0.3 }}
             style={{ rotateX, rotateY, transformStyle: 'preserve-3d' }}
-            className="relative flex flex-col items-center"
+            className="relative flex flex-col items-center order-first lg:order-last"
           >
             {/* Profile Image */}
             <motion.div
-              className="relative mb-12"
-              animate={{ y: [0, -15, 0] }}
-              transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
+              className="relative mb-6 sm:mb-8 lg:mb-12"
+              animate={{ y: [0, -12, 0] }}
+              transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
             >
               {/* Glow Effect */}
-              <div className="absolute inset-0 bg-gradient-to-r from-amber-500 to-orange-600 rounded-full blur-3xl opacity-30 scale-110" />
+              <div className="absolute inset-0 bg-gradient-to-r from-amber-500 to-orange-600 rounded-full blur-3xl opacity-20 scale-125" />
+
+              {/* Ring decoration */}
+              <div className="absolute -inset-3 rounded-full border border-amber-500/10 animate-[spin_20s_linear_infinite]">
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-2 h-2 bg-amber-500/40 rounded-full" />
+              </div>
 
               {/* Image Container */}
-              <div className="relative w-56 h-56 sm:w-64 sm:h-64 md:w-72 md:h-72 lg:w-80 lg:h-80 rounded-full overflow-hidden border-4 border-stone-800 shadow-2xl shadow-amber-500/20">
+              <div className="relative w-40 h-40 xs:w-48 xs:h-48 sm:w-56 sm:h-56 md:w-64 md:h-64 lg:w-72 lg:h-72 xl:w-80 xl:h-80 rounded-full overflow-hidden border-2 border-stone-800/80 shadow-2xl shadow-amber-500/10 ring-1 ring-amber-500/10 ring-offset-4 ring-offset-stone-950">
                 <Image
                   src="/images/profile.jpg"
                   alt={name}
                   fill
                   className="object-cover object-center scale-110"
+                  priority
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-stone-950/60 via-transparent to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-stone-950/50 via-transparent to-transparent" />
               </div>
 
               {/* Floating Badges */}
               <motion.div
-                className="hidden sm:block absolute -top-4 -right-4 px-4 py-2 bg-stone-900 border border-amber-500/30 rounded-xl shadow-lg"
-                animate={{ y: [0, -10, 0], rotate: [0, 5, 0] }}
-                transition={{ duration: 4, repeat: Infinity, delay: 0.5 }}
+                className="hidden sm:flex items-center gap-2 absolute -top-4 -right-4 px-3.5 py-2 bg-stone-900/90 border border-amber-500/20 rounded-xl shadow-lg backdrop-blur-sm"
+                animate={{ y: [0, -8, 0], rotate: [0, 3, 0] }}
+                transition={{ duration: 5, repeat: Infinity, delay: 0.5 }}
               >
-                <span className="text-2xl">🐍</span>
-                <span className="ml-2 text-sm font-medium text-amber-400">Python</span>
+                <span className="text-lg">🐍</span>
+                <span className="text-xs font-semibold text-amber-400">Python</span>
               </motion.div>
 
               <motion.div
-                className="hidden sm:block absolute top-1/2 -left-8 px-4 py-2 bg-stone-900 border border-orange-500/30 rounded-xl shadow-lg"
-                animate={{ y: [0, -10, 0], rotate: [0, -5, 0] }}
-                transition={{ duration: 4, repeat: Infinity, delay: 1 }}
+                className="hidden sm:flex items-center gap-2 absolute top-1/2 -left-8 px-3.5 py-2 bg-stone-900/90 border border-orange-500/20 rounded-xl shadow-lg backdrop-blur-sm"
+                animate={{ y: [0, -8, 0], rotate: [0, -3, 0] }}
+                transition={{ duration: 5, repeat: Infinity, delay: 1 }}
               >
-                <span className="text-2xl">📊</span>
-                <span className="ml-2 text-sm font-medium text-orange-400">Power BI</span>
+                <span className="text-lg">📊</span>
+                <span className="text-xs font-semibold text-orange-400">Power BI</span>
               </motion.div>
 
               <motion.div
-                className="hidden sm:block absolute -bottom-2 right-0 px-4 py-2 bg-stone-900 border border-rose-500/30 rounded-xl shadow-lg"
-                animate={{ y: [0, -10, 0], rotate: [0, 3, 0] }}
-                transition={{ duration: 4, repeat: Infinity, delay: 1.5 }}
+                className="hidden sm:flex items-center gap-2 absolute -bottom-2 right-2 px-3.5 py-2 bg-stone-900/90 border border-rose-500/20 rounded-xl shadow-lg backdrop-blur-sm"
+                animate={{ y: [0, -8, 0], rotate: [0, 2, 0] }}
+                transition={{ duration: 5, repeat: Infinity, delay: 1.5 }}
               >
-                <span className="text-2xl">🤖</span>
-                <span className="ml-2 text-sm font-medium text-rose-400">ML</span>
+                <span className="text-lg">🤖</span>
+                <span className="text-xs font-semibold text-rose-400">ML</span>
               </motion.div>
 
               <motion.div
-                className="hidden sm:block absolute bottom-8 -left-6 px-4 py-2 bg-stone-900 border border-cyan-500/30 rounded-xl shadow-lg"
-                animate={{ y: [0, -10, 0], rotate: [0, -3, 0] }}
-                transition={{ duration: 4, repeat: Infinity, delay: 2 }}
+                className="hidden sm:flex items-center gap-2 absolute bottom-10 -left-6 px-3.5 py-2 bg-stone-900/90 border border-cyan-500/20 rounded-xl shadow-lg backdrop-blur-sm"
+                animate={{ y: [0, -8, 0], rotate: [0, -2, 0] }}
+                transition={{ duration: 5, repeat: Infinity, delay: 2 }}
               >
-                <span className="text-2xl">⚛️</span>
-                <span className="ml-2 text-sm font-medium text-cyan-400">React</span>
+                <span className="text-lg">⚛️</span>
+                <span className="text-xs font-semibold text-cyan-400">React</span>
               </motion.div>
             </motion.div>
 
             {/* Stats Row */}
-            <div className="grid grid-cols-3 gap-6">
-              <StatCard value={`${stats.projectsCompleted}+`} label="Projects" delay={1.0} />
-              <StatCard value={`${stats.certificationsEarned}+`} label="Certificates" delay={1.1} />
-              <StatCard value={`${stats.technologiesMastered}+`} label="Technologies" delay={1.2} />
+            <div className="grid grid-cols-3 gap-4 sm:gap-8 lg:gap-10">
+              <AnimatedCounter target={stats.projectsCompleted} label="Projects" delay={1.0} />
+              <AnimatedCounter target={stats.certificationsEarned} label="Certificates" delay={1.1} />
+              <AnimatedCounter target={stats.technologiesMastered} label="Technologies" delay={1.2} />
             </div>
           </motion.div>
         </div>
@@ -371,11 +411,12 @@ export default function HeroSection({ profile }: HeroSectionProps) {
         >
           <motion.button
             onClick={() => scrollToSection('about')}
-            animate={{ y: [0, 10, 0] }}
+            animate={{ y: [0, 8, 0] }}
             transition={{ duration: 2, repeat: Infinity }}
-            className="text-stone-400 hover:text-amber-400 transition-colors"
+            className="flex flex-col items-center gap-2 text-stone-500 hover:text-amber-400 transition-colors"
           >
-            <ChevronDown className="w-8 h-8" />
+            <span className="text-xs font-medium tracking-wider uppercase">Scroll</span>
+            <ChevronDown className="w-5 h-5" />
           </motion.button>
         </motion.div>
       </motion.div>

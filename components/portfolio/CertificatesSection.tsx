@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Award, ExternalLink, Calendar, CheckCircle2 } from 'lucide-react';
+import { Award, ExternalLink, Calendar, CheckCircle2, Sparkles, ShieldCheck } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -18,42 +18,54 @@ interface Certificate {
 }
 
 // Color variants for certificates
-const colorVariants: { [key: string]: { bg: string; border: string; text: string; icon: string } } = {
+const colorVariants: { [key: string]: { bg: string; border: string; text: string; icon: string; glow: string; barGradient: string } } = {
   amber: {
     bg: 'bg-amber-500/10',
     border: 'border-amber-500/30',
     text: 'text-amber-400',
     icon: 'text-amber-400',
+    glow: 'hover:shadow-amber-500/5',
+    barGradient: 'from-amber-500 to-orange-500',
   },
   blue: {
     bg: 'bg-blue-500/10',
     border: 'border-blue-500/30',
     text: 'text-blue-400',
     icon: 'text-blue-400',
+    glow: 'hover:shadow-blue-500/5',
+    barGradient: 'from-blue-500 to-cyan-500',
   },
   green: {
     bg: 'bg-green-500/10',
     border: 'border-green-500/30',
     text: 'text-green-400',
     icon: 'text-green-400',
+    glow: 'hover:shadow-green-500/5',
+    barGradient: 'from-green-500 to-emerald-500',
   },
   purple: {
     bg: 'bg-purple-500/10',
     border: 'border-purple-500/30',
     text: 'text-purple-400',
     icon: 'text-purple-400',
+    glow: 'hover:shadow-purple-500/5',
+    barGradient: 'from-purple-500 to-violet-500',
   },
   rose: {
     bg: 'bg-rose-500/10',
     border: 'border-rose-500/30',
     text: 'text-rose-400',
     icon: 'text-rose-400',
+    glow: 'hover:shadow-rose-500/5',
+    barGradient: 'from-rose-500 to-pink-500',
   },
   cyan: {
     bg: 'bg-cyan-500/10',
     border: 'border-cyan-500/30',
     text: 'text-cyan-400',
     icon: 'text-cyan-400',
+    glow: 'hover:shadow-cyan-500/5',
+    barGradient: 'from-cyan-500 to-teal-500',
   },
 };
 
@@ -77,38 +89,41 @@ const CertificateCard = ({
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-50px' }}
-      transition={{ delay: index * 0.1, duration: 0.5 }}
+      transition={{ delay: index * 0.08, duration: 0.5 }}
       whileHover={{ y: -5 }}
     >
       <Card
-        className={`bg-stone-900/50 border-stone-800 hover:${colors.border} transition-all duration-300 h-full group`}
+        className={`bg-stone-900/40 border-stone-800/60 hover:border-stone-700/60 transition-all duration-300 h-full group hover:shadow-xl ${colors.glow} overflow-hidden`}
       >
+        {/* Top colored accent bar */}
+        <div className={`h-1 bg-gradient-to-r ${colors.barGradient} opacity-60 group-hover:opacity-100 transition-opacity`} />
+
         <CardContent className="p-6">
           {/* Header */}
           <div className="flex items-start gap-4 mb-4">
-            <div className={`p-3 rounded-xl ${colors.bg} group-hover:scale-110 transition-transform`}>
+            <div className={`p-3 rounded-xl ${colors.bg} group-hover:scale-110 transition-transform duration-300`}>
               <Award className={`w-6 h-6 ${colors.icon}`} />
             </div>
             <div className="flex-1 min-w-0">
-              <h3 className="text-lg font-semibold text-white truncate">{certificate.title}</h3>
-              <p className={`text-sm ${colors.text}`}>{certificate.platform}</p>
+              <h3 className="text-base font-semibold text-white leading-tight group-hover:text-stone-100 transition-colors">{certificate.title}</h3>
+              <p className={`text-sm ${colors.text} font-medium mt-0.5`}>{certificate.platform}</p>
             </div>
           </div>
 
           {/* Date */}
-          <div className="flex items-center gap-2 text-stone-400 text-sm mb-4">
-            <Calendar className="w-4 h-4" />
+          <div className="flex items-center gap-2 text-stone-500 text-xs mb-4">
+            <Calendar className="w-3.5 h-3.5" />
             <span>Issued {formatDate(certificate.issueDate)}</span>
           </div>
 
           {/* Skills */}
           {certificate.skills && certificate.skills.length > 0 && (
-            <div className="flex flex-wrap gap-2 mb-4">
+            <div className="flex flex-wrap gap-1.5 mb-4">
               {certificate.skills.slice(0, 3).map((skill) => (
                 <Badge
                   key={skill}
                   variant="secondary"
-                  className="bg-stone-800/80 text-stone-300 border-stone-700/50 text-xs"
+                  className="bg-stone-800/60 text-stone-300 border-stone-700/50 text-[10px] font-medium px-2 py-0.5"
                 >
                   {skill}
                 </Badge>
@@ -116,7 +131,7 @@ const CertificateCard = ({
               {certificate.skills.length > 3 && (
                 <Badge
                   variant="secondary"
-                  className="bg-stone-800/80 text-stone-400 border-stone-700/50 text-xs"
+                  className="bg-stone-800/40 text-stone-500 border-stone-700/50 text-[10px] font-medium px-2 py-0.5"
                 >
                   +{certificate.skills.length - 3}
                 </Badge>
@@ -126,8 +141,8 @@ const CertificateCard = ({
 
           {/* Credential ID */}
           {certificate.credentialId && (
-            <div className="flex items-center gap-2 text-stone-500 text-xs mb-4">
-              <CheckCircle2 className="w-3 h-3 text-green-400" />
+            <div className="flex items-center gap-2 text-stone-600 text-[11px] mb-4 font-mono">
+              <CheckCircle2 className="w-3 h-3 text-green-500" />
               <span className="truncate">ID: {certificate.credentialId}</span>
             </div>
           )}
@@ -138,11 +153,12 @@ const CertificateCard = ({
               asChild
               variant="outline"
               size="sm"
-              className={`w-full mt-2 border-stone-700 hover:${colors.border} hover:${colors.text}`}
+              className="w-full mt-1 border-stone-800/80 text-stone-400 hover:text-white hover:bg-stone-800/50 hover:border-stone-700 transition-all text-xs"
             >
               <a href={certificate.credentialUrl} target="_blank" rel="noopener noreferrer">
-                <ExternalLink className="w-4 h-4 mr-2" />
+                <ShieldCheck className="w-3.5 h-3.5 mr-2" />
                 Verify Credential
+                <ExternalLink className="w-3 h-3 ml-auto" />
               </a>
             </Button>
           )}
@@ -161,7 +177,8 @@ export default function CertificatesSection({ certificates }: CertificatesSectio
     <section id="certificates" className="py-20 sm:py-32 relative overflow-hidden">
       {/* Background */}
       <div className="absolute inset-0 bg-stone-950" />
-      <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-amber-500/50 to-transparent" />
+      <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-amber-500/30 to-transparent" />
+      <div className="absolute top-1/3 -right-40 w-80 h-80 bg-amber-500/5 rounded-full blur-3xl" />
 
       <div className="container mx-auto px-4 sm:px-6 relative z-10">
         <motion.div
@@ -171,8 +188,9 @@ export default function CertificatesSection({ certificates }: CertificatesSectio
           className="max-w-6xl mx-auto"
         >
           {/* Section Header */}
-          <div className="text-center mb-16">
-            <Badge className="mb-4 bg-amber-500/10 text-amber-400 border-amber-500/30">
+          <div className="text-center mb-14">
+            <Badge className="mb-4 bg-amber-500/10 text-amber-400 border-amber-500/30 px-4 py-1.5 text-sm font-medium">
+              <Award className="w-3.5 h-3.5 mr-1.5 inline-block" />
               Certifications
             </Badge>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4">
@@ -181,44 +199,47 @@ export default function CertificatesSection({ certificates }: CertificatesSectio
                 Credentials
               </span>
             </h2>
-            <p className="text-stone-400 max-w-2xl mx-auto">
+            <p className="text-stone-400 max-w-2xl mx-auto leading-relaxed">
               Industry-recognized certifications demonstrating expertise in data science, cloud
               computing, and software development.
             </p>
           </div>
 
           {/* Certificates Grid */}
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
             {certificates.map((certificate, index) => (
               <CertificateCard key={certificate._id} certificate={certificate} index={index} />
             ))}
           </div>
 
-          {/* Stats */}
+          {/* Summary Stats */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="mt-16 text-center"
+            className="mt-12"
           >
-            <div className="flex flex-col sm:flex-row items-center gap-6 sm:gap-8 p-6 bg-stone-900/50 border border-stone-800 rounded-2xl">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8 p-4 sm:p-6 bg-stone-900/30 border border-stone-800/50 rounded-2xl">
               <div className="text-center">
                 <div className="text-3xl font-bold text-amber-400">{certificates.length}</div>
-                <div className="text-sm text-stone-400">Certifications</div>
+                <div className="text-xs text-stone-500 font-medium mt-0.5">Total Certifications</div>
               </div>
-              <div className="hidden sm:block w-px h-12 bg-stone-700" />
-              <div className="w-16 h-px sm:hidden bg-stone-700" />
+              <div className="hidden sm:block w-px h-10 bg-stone-800" />
+              <div className="w-12 h-px sm:hidden bg-stone-800" />
               <div className="text-center">
                 <div className="text-3xl font-bold text-green-400">
                   {new Set(certificates.map((c) => c.platform)).size}
                 </div>
-                <div className="text-sm text-stone-400">Platforms</div>
+                <div className="text-xs text-stone-500 font-medium mt-0.5">Learning Platforms</div>
               </div>
-              <div className="hidden sm:block w-px h-12 bg-stone-700" />
-              <div className="w-16 h-px sm:hidden bg-stone-700" />
-              <div className="text-center">
-                <div className="text-3xl font-bold text-blue-400">Active</div>
-                <div className="text-sm text-stone-400">Status</div>
+              <div className="hidden sm:block w-px h-10 bg-stone-800" />
+              <div className="w-12 h-px sm:hidden bg-stone-800" />
+              <div className="text-center flex flex-col items-center">
+                <div className="flex items-center gap-1.5">
+                  <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                  <span className="text-xl font-bold text-blue-400">Active</span>
+                </div>
+                <div className="text-xs text-stone-500 font-medium mt-0.5">Credential Status</div>
               </div>
             </div>
           </motion.div>
