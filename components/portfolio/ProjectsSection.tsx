@@ -163,13 +163,13 @@ interface ProjectsSectionProps {
 
 export default function ProjectsSection({ projects }: ProjectsSectionProps) {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
-  const [filter, setFilter] = useState<string>('All');
+  const [filter, setFilter] = useState<string | null>(null);
 
-  // Get unique categories
-  const categories = ['All', ...Array.from(new Set(projects.map((p) => p.category)))];
+  // Get unique categories (no "All" option)
+  const categories = Array.from(new Set(projects.map((p) => p.category)));
 
-  // Filter projects
-  const filteredProjects = filter === 'All' ? projects : projects.filter((p) => p.category === filter);
+  // Filter projects - show all when no filter selected
+  const filteredProjects = filter === null ? projects : projects.filter((p) => p.category === filter);
 
   return (
     <section id="projects" className="py-20 sm:py-32 relative overflow-hidden">
@@ -213,7 +213,7 @@ export default function ProjectsSection({ projects }: ProjectsSectionProps) {
                 key={category}
                 variant={filter === category ? 'default' : 'outline'}
                 size="sm"
-                onClick={() => setFilter(category)}
+                onClick={() => setFilter(filter === category ? null : category)}
                 className={
                   filter === category
                     ? 'bg-amber-500 hover:bg-amber-600 text-white'
