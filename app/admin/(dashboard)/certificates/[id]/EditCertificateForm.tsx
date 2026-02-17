@@ -9,16 +9,42 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { toast } from '@/components/ui/use-toast';
-import { ArrowLeft, Loader2 } from 'lucide-react';
+import { ArrowLeft, Loader2, Plus, X } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
 import DeleteButton from '@/components/admin/DeleteButton';
+
+const colorOptions = [
+  { value: 'amber', label: 'Amber', className: 'bg-amber-500' },
+  { value: 'blue', label: 'Blue', className: 'bg-blue-500' },
+  { value: 'green', label: 'Green', className: 'bg-green-500' },
+  { value: 'purple', label: 'Purple', className: 'bg-purple-500' },
+  { value: 'rose', label: 'Rose', className: 'bg-rose-500' },
+  { value: 'cyan', label: 'Cyan', className: 'bg-cyan-500' },
+];
 
 interface Certificate {
   _id: string;
   title: string;
   platform: string;
   issueDate: string;
+  credentialId?: string;
+  credentialUrl?: string;
+  certificateFile?: string;
+  skills?: string[];
+  color: string;
+  description: string;
+  order: number;
+  isVisible: boolean;
+}
+
+interface FormData {
+  title: string;
+  platform: string;
+  issueDate: string;
+  credentialId: string;
   credentialUrl: string;
-  logo: string;
+  certificateFile: string;
+  skills: string[];
   color: string;
   description: string;
   order: number;
@@ -28,17 +54,32 @@ interface Certificate {
 export default function EditCertificateForm({ certificate }: { certificate: Certificate }) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
-  const [formData, setFormData] = useState<Omit<Certificate, '_id'>>({
+  const [newSkill, setNewSkill] = useState('');
+  const [formData, setFormData] = useState<FormData>({
     title: certificate.title,
     platform: certificate.platform,
     issueDate: certificate.issueDate ? new Date(certificate.issueDate).toISOString().split('T')[0] : '',
+    credentialId: certificate.credentialId || '',
     credentialUrl: certificate.credentialUrl || '',
-    logo: certificate.logo || '',
-    color: certificate.color || '#f59e0b',
+    certificateFile: certificate.certificateFile || '',
+    skills: certificate.skills || [],
+    color: certificate.color || 'amber',
     description: certificate.description || '',
     order: certificate.order || 0,
     isVisible: certificate.isVisible !== false,
   });
+
+  const addSkill = () => {
+    const skill = newSkill.trim();
+    if (skill && !formData.skills.includes(skill)) {
+      setFormData({ ...formData, skills: [...formData.skills, skill] });
+      setNewSkill('');
+    }
+  };
+
+  const removeSkill = (skillToRemove: string) => {
+    setFormData({ ...formData, skills: formData.skills.filter((s) => s !== skillToRemove) });
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -88,13 +129,14 @@ export default function EditCertificateForm({ certificate }: { certificate: Cert
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
+        {/* Basic Information */}
         <Card className="bg-stone-900/50 border-stone-800">
           <CardHeader>
             <CardTitle className="text-stone-100">Certificate Information</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <Label className="text-stone-300">Title</Label>
+              <Label className="text-stone-300">Title *</Label>
               <Input
                 value={formData.title}
                 onChange={(e) => setFormData({ ...formData, title: e.target.value })}
@@ -105,7 +147,7 @@ export default function EditCertificateForm({ certificate }: { certificate: Cert
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label className="text-stone-300">Platform</Label>
+                <Label className="text-stone-300">Platform *</Label>
                 <Input
                   value={formData.platform}
                   onChange={(e) => setFormData({ ...formData, platform: e.target.value })}
@@ -125,6 +167,45 @@ export default function EditCertificateForm({ certificate }: { certificate: Cert
               </div>
             </div>
             <div className="space-y-2">
+              <Label className="text-stone-300">Credential ID</Label>
+              <Input
+                value={formData.credentialId}
+                onChange={(e) => setFormData({ ...formData, credentialId: e.target.value })}
+                placeholder="AWS-CP-2024-001"
+                className="bg-stone-800 border-stone-700 text-stone-100"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label className="text-stone-300">Description</Label>
+              <Textarea
+                value={formData.description}
+                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                placeholder="Brief description of what this certification covers"
+                className="bg-stone-800 border-stone-700 text-stone-100"
+              />
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Certificate File */}
+        <Card className="bg-stone-900/50 border-stone-800">
+          <CardHeader>
+            <CardTitle className="text-stone-100">Certificate File</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <Label className="text-stone-300">Certificate PDF / Image Path</Label>
+              <Input
+                value={formData.certificateFile}
+                onChange={(e) => setFormData({ ...formData, certificateFile: e.target.value })}
+                placeholder="/Certificates/my-certificate.pdf"
+                className="bg-stone-800 border-stone-700 text-stone-100"
+              />
+              <p className="text-xs text-stone-500">
+                Path to the certificate file in the public folder. Example: /Certificates/My Certificate.pdf
+              </p>
+            </div>
+            <div className="space-y-2">
               <Label className="text-stone-300">Credential URL</Label>
               <Input
                 type="url"
@@ -134,40 +215,74 @@ export default function EditCertificateForm({ certificate }: { certificate: Cert
                 className="bg-stone-800 border-stone-700 text-stone-100"
               />
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label className="text-stone-300">Brand Color</Label>
-                <div className="flex gap-2">
-                  <Input
-                    type="color"
-                    value={formData.color}
-                    onChange={(e) => setFormData({ ...formData, color: e.target.value })}
-                    className="w-12 h-10 p-1 bg-stone-800 border-stone-700"
-                  />
-                  <Input
-                    value={formData.color}
-                    onChange={(e) => setFormData({ ...formData, color: e.target.value })}
-                    placeholder="#f59e0b"
-                    className="bg-stone-800 border-stone-700 text-stone-100"
-                  />
-                </div>
+          </CardContent>
+        </Card>
+
+        {/* Skills */}
+        <Card className="bg-stone-900/50 border-stone-800">
+          <CardHeader>
+            <CardTitle className="text-stone-100">Skills</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="flex gap-2">
+              <Input
+                value={newSkill}
+                onChange={(e) => setNewSkill(e.target.value)}
+                onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); addSkill(); } }}
+                placeholder="Add a skill (e.g. Python, AWS, SQL)"
+                className="bg-stone-800 border-stone-700 text-stone-100"
+              />
+              <Button type="button" onClick={addSkill} variant="outline" className="border-stone-700 text-stone-300 hover:bg-stone-800 flex-shrink-0">
+                <Plus className="w-4 h-4" />
+              </Button>
+            </div>
+            {formData.skills.length > 0 && (
+              <div className="flex flex-wrap gap-2">
+                {formData.skills.map((skill) => (
+                  <Badge key={skill} className="bg-stone-800 text-stone-200 border-stone-700 gap-1.5 pr-1.5">
+                    {skill}
+                    <button type="button" onClick={() => removeSkill(skill)} className="hover:text-red-400 transition-colors">
+                      <X className="w-3 h-3" />
+                    </button>
+                  </Badge>
+                ))}
               </div>
-              <div className="space-y-2">
-                <Label className="text-stone-300">Display Order</Label>
-                <Input
-                  type="number"
-                  value={formData.order}
-                  onChange={(e) => setFormData({ ...formData, order: parseInt(e.target.value) || 0 })}
-                  className="bg-stone-800 border-stone-700 text-stone-100"
-                />
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Display Settings */}
+        <Card className="bg-stone-900/50 border-stone-800">
+          <CardHeader>
+            <CardTitle className="text-stone-100">Display Settings</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <Label className="text-stone-300">Card Color Theme</Label>
+              <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
+                {colorOptions.map((opt) => (
+                  <button
+                    key={opt.value}
+                    type="button"
+                    onClick={() => setFormData({ ...formData, color: opt.value })}
+                    className={`flex flex-col items-center gap-1.5 p-3 rounded-xl border-2 transition-all ${
+                      formData.color === opt.value
+                        ? 'border-white bg-stone-800/80 scale-105'
+                        : 'border-stone-700/50 bg-stone-800/30 hover:border-stone-600'
+                    }`}
+                  >
+                    <div className={`w-6 h-6 rounded-full ${opt.className}`} />
+                    <span className="text-xs text-stone-400">{opt.label}</span>
+                  </button>
+                ))}
               </div>
             </div>
             <div className="space-y-2">
-              <Label className="text-stone-300">Description (optional)</Label>
-              <Textarea
-                value={formData.description}
-                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                placeholder="Brief description of what this certification covers"
+              <Label className="text-stone-300">Display Order</Label>
+              <Input
+                type="number"
+                value={formData.order}
+                onChange={(e) => setFormData({ ...formData, order: parseInt(e.target.value) || 0 })}
                 className="bg-stone-800 border-stone-700 text-stone-100"
               />
             </div>

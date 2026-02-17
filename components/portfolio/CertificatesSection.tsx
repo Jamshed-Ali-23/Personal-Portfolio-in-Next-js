@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Award, ExternalLink, Calendar, CheckCircle2, Sparkles, ShieldCheck, FileText, Download, X, Eye } from 'lucide-react';
+import { Award, ExternalLink, Calendar, CheckCircle2, FileText, Download, X, Eye } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -163,20 +163,6 @@ const CertificateCard = ({
                 <Eye className="w-3.5 h-3.5 mr-2" />
                 View Certificate
                 <FileText className="w-3 h-3 ml-auto" />
-              </Button>
-            )}
-            {certificate.credentialUrl && (
-              <Button
-                asChild
-                variant="outline"
-                size="sm"
-                className="w-full border-stone-800/80 text-stone-400 hover:text-white hover:bg-stone-800/50 hover:border-stone-700 transition-all text-xs"
-              >
-                <a href={certificate.credentialUrl} target="_blank" rel="noopener noreferrer">
-                  <ShieldCheck className="w-3.5 h-3.5 mr-2" />
-                  Verify Credential
-                  <ExternalLink className="w-3 h-3 ml-auto" />
-                </a>
               </Button>
             )}
           </div>
