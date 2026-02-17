@@ -63,54 +63,6 @@ const TechBadge = ({ icon: Icon, label, delay }: { icon: React.ElementType; labe
   </motion.div>
 );
 
-// Animated counter
-const AnimatedCounter = ({ target, label, delay }: { target: number; label: string; delay: number }) => {
-  const [count, setCount] = useState(0);
-  const [hasAnimated, setHasAnimated] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting && !hasAnimated) {
-          setHasAnimated(true);
-          let start = 0;
-          const duration = 1500;
-          const startTime = performance.now();
-          const animate = (currentTime: number) => {
-            const elapsed = currentTime - startTime;
-            const progress = Math.min(elapsed / duration, 1);
-            // ease-out
-            const eased = 1 - Math.pow(1 - progress, 3);
-            start = Math.floor(eased * target);
-            setCount(start);
-            if (progress < 1) requestAnimationFrame(animate);
-          };
-          requestAnimationFrame(animate);
-        }
-      },
-      { threshold: 0.5 }
-    );
-    if (ref.current) observer.observe(ref.current);
-    return () => observer.disconnect();
-  }, [target, hasAnimated]);
-
-  return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, scale: 0.8 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{ delay, duration: 0.5, type: 'spring' }}
-      className="text-center group"
-    >
-      <div className="text-2xl sm:text-3xl md:text-4xl font-bold bg-gradient-to-r from-amber-400 to-orange-500 bg-clip-text text-transparent">
-        {count}+
-      </div>
-      <div className="text-xs sm:text-sm text-stone-500 mt-1 font-medium">{label}</div>
-    </motion.div>
-  );
-};
-
 interface HeroSectionProps {
   profile: Profile | null;
 }
@@ -153,7 +105,6 @@ export default function HeroSection({ profile }: HeroSectionProps) {
   };
 
   const name = profile?.name || 'Jamshed Ali';
-  const stats = profile?.stats || { projectsCompleted: 12, certificationsEarned: 6, technologiesMastered: 25 };
 
   return (
     <section
@@ -355,50 +306,7 @@ export default function HeroSection({ profile }: HeroSectionProps) {
                 <div className="absolute inset-0 bg-gradient-to-t from-stone-950/50 via-transparent to-transparent" />
               </div>
 
-              {/* Floating Badges */}
-              <motion.div
-                className="hidden sm:flex items-center gap-2 absolute -top-4 -right-4 px-3.5 py-2 bg-stone-900/90 border border-amber-500/20 rounded-xl shadow-lg backdrop-blur-sm"
-                animate={{ y: [0, -8, 0], rotate: [0, 3, 0] }}
-                transition={{ duration: 5, repeat: Infinity, delay: 0.5 }}
-              >
-                <span className="text-lg">🐍</span>
-                <span className="text-xs font-semibold text-amber-400">Python</span>
-              </motion.div>
-
-              <motion.div
-                className="hidden sm:flex items-center gap-2 absolute top-1/2 -left-8 px-3.5 py-2 bg-stone-900/90 border border-orange-500/20 rounded-xl shadow-lg backdrop-blur-sm"
-                animate={{ y: [0, -8, 0], rotate: [0, -3, 0] }}
-                transition={{ duration: 5, repeat: Infinity, delay: 1 }}
-              >
-                <span className="text-lg">📊</span>
-                <span className="text-xs font-semibold text-orange-400">Power BI</span>
-              </motion.div>
-
-              <motion.div
-                className="hidden sm:flex items-center gap-2 absolute -bottom-2 right-2 px-3.5 py-2 bg-stone-900/90 border border-rose-500/20 rounded-xl shadow-lg backdrop-blur-sm"
-                animate={{ y: [0, -8, 0], rotate: [0, 2, 0] }}
-                transition={{ duration: 5, repeat: Infinity, delay: 1.5 }}
-              >
-                <span className="text-lg">🤖</span>
-                <span className="text-xs font-semibold text-rose-400">ML</span>
-              </motion.div>
-
-              <motion.div
-                className="hidden sm:flex items-center gap-2 absolute bottom-10 -left-6 px-3.5 py-2 bg-stone-900/90 border border-cyan-500/20 rounded-xl shadow-lg backdrop-blur-sm"
-                animate={{ y: [0, -8, 0], rotate: [0, -2, 0] }}
-                transition={{ duration: 5, repeat: Infinity, delay: 2 }}
-              >
-                <span className="text-lg">⚛️</span>
-                <span className="text-xs font-semibold text-cyan-400">React</span>
-              </motion.div>
             </motion.div>
-
-            {/* Stats Row */}
-            <div className="grid grid-cols-3 gap-4 sm:gap-8 lg:gap-10">
-              <AnimatedCounter target={stats.projectsCompleted} label="Projects" delay={1.0} />
-              <AnimatedCounter target={stats.certificationsEarned} label="Certificates" delay={1.1} />
-              <AnimatedCounter target={stats.technologiesMastered} label="Technologies" delay={1.2} />
-            </div>
           </motion.div>
         </div>
 
