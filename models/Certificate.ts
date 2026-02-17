@@ -6,6 +6,7 @@ export interface ICertificate extends Document {
   issueDate?: Date | string;
   credentialId?: string;
   credentialUrl?: string;
+  certificateFile?: string;
   skills?: string[];
   color?: string;
   description?: string;
@@ -22,6 +23,7 @@ const CertificateSchema = new Schema<ICertificate>(
     issueDate: { type: Schema.Types.Mixed },
     credentialId: String,
     credentialUrl: String,
+    certificateFile: String,
     skills: { type: [String], default: [] },
     color: { type: String, default: 'amber' },
     description: String,

@@ -1,7 +1,8 @@
 'use client';
 
-import { motion } from 'framer-motion';
-import { Award, ExternalLink, Calendar, CheckCircle2, Sparkles, ShieldCheck } from 'lucide-react';
+import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Award, ExternalLink, Calendar, CheckCircle2, Sparkles, ShieldCheck, FileText, Download, X, Eye } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -13,6 +14,7 @@ interface Certificate {
   issueDate: string;
   credentialId?: string;
   credentialUrl?: string;
+  certificateFile?: string;
   skills?: string[];
   color?: string;
 }
@@ -73,9 +75,11 @@ const colorVariants: { [key: string]: { bg: string; border: string; text: string
 const CertificateCard = ({
   certificate,
   index,
+  onViewCertificate,
 }: {
   certificate: Certificate;
   index: number;
+  onViewCertificate: (cert: Certificate) => void;
 }) => {
   const colors = colorVariants[certificate.color || 'amber'] || colorVariants.amber;
 
@@ -147,21 +151,35 @@ const CertificateCard = ({
             </div>
           )}
 
-          {/* Action */}
-          {certificate.credentialUrl && (
-            <Button
-              asChild
-              variant="outline"
-              size="sm"
-              className="w-full mt-1 border-stone-800/80 text-stone-400 hover:text-white hover:bg-stone-800/50 hover:border-stone-700 transition-all text-xs"
-            >
-              <a href={certificate.credentialUrl} target="_blank" rel="noopener noreferrer">
-                <ShieldCheck className="w-3.5 h-3.5 mr-2" />
-                Verify Credential
-                <ExternalLink className="w-3 h-3 ml-auto" />
-              </a>
-            </Button>
-          )}
+          {/* Actions */}
+          <div className="flex flex-col gap-2 mt-1">
+            {certificate.certificateFile && (
+              <Button
+                onClick={() => onViewCertificate(certificate)}
+                variant="outline"
+                size="sm"
+                className={`w-full border-stone-800/80 ${colors.text} hover:text-white hover:bg-stone-800/50 hover:border-stone-700 transition-all text-xs`}
+              >
+                <Eye className="w-3.5 h-3.5 mr-2" />
+                View Certificate
+                <FileText className="w-3 h-3 ml-auto" />
+              </Button>
+            )}
+            {certificate.credentialUrl && (
+              <Button
+                asChild
+                variant="outline"
+                size="sm"
+                className="w-full border-stone-800/80 text-stone-400 hover:text-white hover:bg-stone-800/50 hover:border-stone-700 transition-all text-xs"
+              >
+                <a href={certificate.credentialUrl} target="_blank" rel="noopener noreferrer">
+                  <ShieldCheck className="w-3.5 h-3.5 mr-2" />
+                  Verify Credential
+                  <ExternalLink className="w-3 h-3 ml-auto" />
+                </a>
+              </Button>
+            )}
+          </div>
         </CardContent>
       </Card>
     </motion.div>
@@ -173,6 +191,8 @@ interface CertificatesSectionProps {
 }
 
 export default function CertificatesSection({ certificates }: CertificatesSectionProps) {
+  const [selectedCertificate, setSelectedCertificate] = useState<Certificate | null>(null);
+
   return (
     <section id="certificates" className="py-20 sm:py-32 relative overflow-hidden">
       {/* Background */}
@@ -208,7 +228,12 @@ export default function CertificatesSection({ certificates }: CertificatesSectio
           {/* Certificates Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
             {certificates.map((certificate, index) => (
-              <CertificateCard key={certificate._id} certificate={certificate} index={index} />
+              <CertificateCard
+                key={certificate._id}
+                certificate={certificate}
+                index={index}
+                onViewCertificate={setSelectedCertificate}
+              />
             ))}
           </div>
 
@@ -245,6 +270,93 @@ export default function CertificatesSection({ certificates }: CertificatesSectio
           </motion.div>
         </motion.div>
       </div>
+
+      {/* Certificate Preview Modal */}
+      <AnimatePresence>
+        {selectedCertificate && selectedCertificate.certificateFile && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/85 backdrop-blur-sm"
+            onClick={() => setSelectedCertificate(null)}
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+              className="relative w-full max-w-4xl max-h-[90vh] bg-stone-950 border border-stone-800 rounded-2xl overflow-hidden shadow-2xl"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Modal Header */}
+              <div className="flex items-center justify-between p-4 sm:p-5 border-b border-stone-800/60 bg-stone-900/50">
+                <div className="flex items-center gap-3 min-w-0">
+                  <div className={`p-2 rounded-lg ${colorVariants[selectedCertificate.color || 'amber']?.bg || 'bg-amber-500/10'}`}>
+                    <Award className={`w-5 h-5 ${colorVariants[selectedCertificate.color || 'amber']?.icon || 'text-amber-400'}`} />
+                  </div>
+                  <div className="min-w-0">
+                    <h3 className="text-sm sm:text-base font-semibold text-white truncate">{selectedCertificate.title}</h3>
+                    <p className="text-xs text-stone-400">{selectedCertificate.platform}</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 ml-3 flex-shrink-0">
+                  <a
+                    href={selectedCertificate.certificateFile}
+                    download
+                    className="p-2 rounded-lg bg-stone-800/50 text-stone-400 hover:text-amber-400 hover:bg-stone-800 transition-colors"
+                    title="Download Certificate"
+                  >
+                    <Download className="w-4 h-4" />
+                  </a>
+                  <a
+                    href={selectedCertificate.certificateFile}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="p-2 rounded-lg bg-stone-800/50 text-stone-400 hover:text-amber-400 hover:bg-stone-800 transition-colors"
+                    title="Open in New Tab"
+                  >
+                    <ExternalLink className="w-4 h-4" />
+                  </a>
+                  <button
+                    onClick={() => setSelectedCertificate(null)}
+                    className="p-2 rounded-lg bg-stone-800/50 text-stone-400 hover:text-white hover:bg-stone-800 transition-colors"
+                    title="Close"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+
+              {/* PDF Viewer */}
+              <div className="w-full h-[70vh] sm:h-[75vh] bg-stone-900">
+                <iframe
+                  src={`${selectedCertificate.certificateFile}#toolbar=1&navpanes=0`}
+                  className="w-full h-full border-0"
+                  title={`${selectedCertificate.title} Certificate`}
+                />
+              </div>
+
+              {/* Mobile Fallback - Download Button */}
+              <div className="sm:hidden p-4 border-t border-stone-800/60 bg-stone-900/50">
+                <p className="text-xs text-stone-500 text-center mb-3">
+                  If the PDF doesn&apos;t display, use the button below
+                </p>
+                <a
+                  href={selectedCertificate.certificateFile}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-2 w-full py-2.5 px-4 bg-amber-500/10 text-amber-400 border border-amber-500/30 rounded-lg text-sm font-medium hover:bg-amber-500/20 transition-colors"
+                >
+                  <FileText className="w-4 h-4" />
+                  Open Certificate PDF
+                </a>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 }
