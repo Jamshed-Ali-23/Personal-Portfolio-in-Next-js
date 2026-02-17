@@ -53,12 +53,12 @@ const InfoCard = ({
   >
     <Card className="bg-stone-900/40 border-stone-800/60 hover:border-stone-700/60 transition-all duration-300 group hover:shadow-lg">
       <CardContent className="p-5 flex items-center gap-4">
-        <div className={`p-3 rounded-xl ${accent} group-hover:scale-110 transition-transform duration-300`}>
+        <div className={`p-3 rounded-xl ${accent} group-hover:scale-110 transition-transform duration-300 flex-shrink-0`}>
           <Icon className="w-5 h-5" />
         </div>
-        <div>
+        <div className="min-w-0">
           <p className="text-xs text-stone-500 font-medium uppercase tracking-wider">{title}</p>
-          <p className="text-white font-semibold mt-0.5">{value}</p>
+          <p className="text-white font-semibold mt-0.5 truncate">{value}</p>
         </div>
       </CardContent>
     </Card>

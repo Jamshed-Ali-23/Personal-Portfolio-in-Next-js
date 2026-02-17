@@ -261,20 +261,20 @@ export default function ProjectDetailModal({ project, onClose }: ProjectDetailMo
               </div>
 
               {/* Footer */}
-              <div className="p-3 sm:p-4 md:p-6 border-t border-stone-800/80 bg-stone-900/95 backdrop-blur-sm flex flex-wrap items-center justify-between gap-3">
+              <div className="p-3 sm:p-4 md:p-6 border-t border-stone-800/80 bg-stone-900/95 backdrop-blur-sm flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center justify-between gap-3">
                 <Button
                   variant="outline"
                   onClick={onClose}
-                  className="border-stone-700 text-stone-300 hover:bg-stone-800 hover:text-white"
+                  className="border-stone-700 text-stone-300 hover:bg-stone-800 hover:text-white w-full sm:w-auto"
                 >
                   Close
                 </Button>
-                <div className="flex items-center gap-3">
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
                   {project.githubUrl && (
                     <Button
                       asChild
                       variant="outline"
-                      className="border-stone-700 text-stone-300 hover:bg-stone-800 hover:text-white"
+                      className="border-stone-700 text-stone-300 hover:bg-stone-800 hover:text-white w-full sm:w-auto"
                     >
                       <a href={project.githubUrl} target="_blank" rel="noopener noreferrer">
                         <Github className="w-4 h-4 mr-2" />
@@ -285,7 +285,7 @@ export default function ProjectDetailModal({ project, onClose }: ProjectDetailMo
                   {project.liveUrl && (
                     <Button
                       asChild
-                      className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-semibold"
+                      className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-semibold w-full sm:w-auto"
                     >
                       <a href={project.liveUrl} target="_blank" rel="noopener noreferrer">
                         <ArrowUpRight className="w-4 h-4 mr-2" />

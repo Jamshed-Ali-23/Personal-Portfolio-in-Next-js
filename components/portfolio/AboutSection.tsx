@@ -194,7 +194,7 @@ export default function AboutSection({ profile, experiences }: AboutSectionProps
                     <h4 className="text-xs font-semibold text-stone-400 uppercase tracking-widest">
                       Relevant Coursework
                     </h4>
-                    <div className="grid grid-cols-2 gap-2.5">
+                    <div className="grid grid-cols-1 xs:grid-cols-2 gap-2.5">
                       {coursework.map((item, index) => (
                         <CourseworkItem key={item} item={item} index={index} />
                       ))}

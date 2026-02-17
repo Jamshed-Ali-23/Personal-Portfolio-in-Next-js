@@ -164,7 +164,7 @@ export default function HeroSection({ profile }: HeroSectionProps) {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.5 }}
-                className="text-base sm:text-xl md:text-2xl lg:text-3xl text-stone-300 h-8 sm:h-10 overflow-hidden"
+                className="text-base sm:text-xl md:text-2xl lg:text-3xl text-stone-300 min-h-[2rem] sm:min-h-[2.5rem]"
               >
                 {text}
                 <motion.span
@@ -180,7 +180,7 @@ export default function HeroSection({ profile }: HeroSectionProps) {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.6 }}
-              className="text-base sm:text-lg text-stone-400 leading-relaxed max-w-xl"
+              className="text-base sm:text-lg text-stone-400 leading-relaxed max-w-xl mx-auto lg:mx-0"
             >
               I transform complex data into actionable insights. Specializing in
               <span className="text-amber-400 font-medium"> Python, Power BI, SQL</span>, and
@@ -206,7 +206,7 @@ export default function HeroSection({ profile }: HeroSectionProps) {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.8 }}
-              className="flex flex-col xs:flex-row flex-wrap gap-3 sm:gap-4 pt-2"
+              className="flex flex-col xs:flex-row flex-wrap gap-3 sm:gap-4 pt-2 justify-center lg:justify-start"
             >
               <Button
                 size="lg"
@@ -239,7 +239,7 @@ export default function HeroSection({ profile }: HeroSectionProps) {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.9 }}
-              className="flex gap-3 pt-2 justify-center sm:justify-start"
+              className="flex gap-3 pt-2 justify-center lg:justify-start"
             >
               {profile?.socialLinks?.github && (
                 <a
