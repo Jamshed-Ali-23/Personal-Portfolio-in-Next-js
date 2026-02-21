@@ -9,7 +9,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { toast } from '@/components/ui/use-toast';
-import { ArrowLeft, Loader2, Plus, X } from 'lucide-react';
+import { ArrowLeft, Loader2, Plus, X, Upload, FileText, ImageIcon, Trash2 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 
 const colorOptions = [
@@ -38,6 +38,8 @@ interface FormData {
 export default function NewCertificatePage() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadedFileName, setUploadedFileName] = useState('');
   const [newSkill, setNewSkill] = useState('');
   const [formData, setFormData] = useState<FormData>({
     title: '',
@@ -63,6 +65,37 @@ export default function NewCertificatePage() {
 
   const removeSkill = (skillToRemove: string) => {
     setFormData({ ...formData, skills: formData.skills.filter((s) => s !== skillToRemove) });
+  };
+
+  const handleFileUpload = async (file: File) => {
+    setIsUploading(true);
+    try {
+      const uploadData = new FormData();
+      uploadData.append('file', file);
+      uploadData.append('folder', 'certificates');
+
+      const res = await fetch('/api/upload', {
+        method: 'POST',
+        body: uploadData,
+      });
+
+      if (!res.ok) throw new Error('Upload failed');
+
+      const { url } = await res.json();
+      setFormData((prev) => ({ ...prev, certificateFile: url }));
+      setUploadedFileName(file.name);
+      toast({ title: 'Uploaded', description: `${file.name} uploaded successfully` });
+    } catch (_err) {
+      toast({ title: 'Upload Failed', description: 'Could not upload file. Check Cloudinary settings.', variant: 'destructive' });
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    const file = e.dataTransfer.files[0];
+    if (file) handleFileUpload(file);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -168,23 +201,73 @@ export default function NewCertificatePage() {
           </CardContent>
         </Card>
 
-        {/* Certificate File */}
+        {/* Certificate File Upload */}
         <Card className="bg-stone-900/50 border-stone-800">
           <CardHeader>
             <CardTitle className="text-stone-100">Certificate File</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <Label className="text-stone-300">Certificate PDF / Image Path</Label>
+              <Label className="text-stone-300">Upload Certificate (PDF or Image)</Label>
+              {formData.certificateFile ? (
+                <div className="flex items-center gap-3 p-3 bg-stone-800/60 border border-stone-700 rounded-lg">
+                  {formData.certificateFile.match(/\.(jpg|jpeg|png|gif|webp)$/i) ? (
+                    <ImageIcon className="w-8 h-8 text-amber-400 flex-shrink-0" />
+                  ) : (
+                    <FileText className="w-8 h-8 text-amber-400 flex-shrink-0" />
+                  )}
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm text-stone-200 truncate">{uploadedFileName || 'Certificate file'}</p>
+                    <a href={formData.certificateFile} target="_blank" rel="noopener noreferrer" className="text-xs text-amber-400/80 hover:text-amber-400 truncate block">
+                      {formData.certificateFile}
+                    </a>
+                  </div>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => { setFormData({ ...formData, certificateFile: '' }); setUploadedFileName(''); }}
+                    className="text-stone-500 hover:text-red-400 flex-shrink-0"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </Button>
+                </div>
+              ) : (
+                <div
+                  onDrop={handleDrop}
+                  onDragOver={(e) => e.preventDefault()}
+                  className="relative border-2 border-dashed border-stone-700 hover:border-amber-500/50 rounded-xl p-8 text-center transition-colors cursor-pointer group"
+                >
+                  <input
+                    type="file"
+                    accept=".pdf,.jpg,.jpeg,.png,.gif,.webp"
+                    onChange={(e) => { const f = e.target.files?.[0]; if (f) handleFileUpload(f); }}
+                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                    disabled={isUploading}
+                  />
+                  {isUploading ? (
+                    <div className="flex flex-col items-center gap-2">
+                      <Loader2 className="w-8 h-8 text-amber-400 animate-spin" />
+                      <p className="text-sm text-stone-400">Uploading...</p>
+                    </div>
+                  ) : (
+                    <div className="flex flex-col items-center gap-2">
+                      <Upload className="w-8 h-8 text-stone-500 group-hover:text-amber-400 transition-colors" />
+                      <p className="text-sm text-stone-400">Drag & drop or <span className="text-amber-400">click to browse</span></p>
+                      <p className="text-xs text-stone-600">PDF, JPG, PNG, GIF, WebP</p>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+            <div className="space-y-2">
+              <Label className="text-stone-300">Or paste file URL directly</Label>
               <Input
                 value={formData.certificateFile}
                 onChange={(e) => setFormData({ ...formData, certificateFile: e.target.value })}
-                placeholder="/Certificates/my-certificate.pdf"
+                placeholder="https://... or /Certificates/my-cert.pdf"
                 className="bg-stone-800 border-stone-700 text-stone-100"
               />
-              <p className="text-xs text-stone-500">
-                Path to the certificate file in the public folder. Example: /Certificates/My Certificate.pdf
-              </p>
             </div>
             <div className="space-y-2">
               <Label className="text-stone-300">Credential URL</Label>
