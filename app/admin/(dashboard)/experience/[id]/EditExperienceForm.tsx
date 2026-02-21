@@ -9,16 +9,21 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { toast } from '@/components/ui/use-toast';
 import { ArrowLeft, Loader2, Plus, X } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Textarea } from '@/components/ui/textarea';
 import DeleteButton from '@/components/admin/DeleteButton';
 
 interface Experience {
   _id: string;
   role: string;
   company: string;
+  location?: string;
+  description?: string;
   startDate: string;
   endDate: string;
   isCurrent: boolean;
   achievements: string[];
+  technologies?: string[];
   order: number;
   isVisible: boolean;
 }
@@ -26,13 +31,17 @@ interface Experience {
 export default function EditExperienceForm({ experience }: { experience: Experience }) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
+  const [newTech, setNewTech] = useState('');
   const [formData, setFormData] = useState<Omit<Experience, '_id'>>({
     role: experience.role,
     company: experience.company,
+    location: experience.location || '',
+    description: experience.description || '',
     startDate: experience.startDate ? new Date(experience.startDate).toISOString().split('T')[0] : '',
     endDate: experience.endDate ? new Date(experience.endDate).toISOString().split('T')[0] : '',
     isCurrent: experience.isCurrent || false,
     achievements: experience.achievements || [],
+    technologies: experience.technologies || [],
     order: experience.order || 0,
     isVisible: experience.isVisible !== false,
   });
@@ -85,6 +94,18 @@ export default function EditExperienceForm({ experience }: { experience: Experie
     });
   };
 
+  const addTech = () => {
+    const tech = newTech.trim();
+    if (tech && !(formData.technologies || []).includes(tech)) {
+      setFormData({ ...formData, technologies: [...(formData.technologies || []), tech] });
+      setNewTech('');
+    }
+  };
+
+  const removeTech = (techToRemove: string) => {
+    setFormData({ ...formData, technologies: (formData.technologies || []).filter((t) => t !== techToRemove) });
+  };
+
   return (
     <div className="space-y-6 max-w-2xl">
       <div className="flex items-center justify-between">
@@ -118,14 +139,35 @@ export default function EditExperienceForm({ experience }: { experience: Experie
                 className="bg-stone-800 border-stone-700 text-stone-100"
               />
             </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label className="text-stone-300">Company *</Label>
+                <Input
+                  value={formData.company}
+                  onChange={(e) => setFormData({ ...formData, company: e.target.value })}
+                  placeholder="Company Name"
+                  required
+                  className="bg-stone-800 border-stone-700 text-stone-100"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label className="text-stone-300">Location</Label>
+                <Input
+                  value={formData.location || ''}
+                  onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                  placeholder="Islamabad, Pakistan"
+                  className="bg-stone-800 border-stone-700 text-stone-100"
+                />
+              </div>
+            </div>
             <div className="space-y-2">
-              <Label className="text-stone-300">Company</Label>
-              <Input
-                value={formData.company}
-                onChange={(e) => setFormData({ ...formData, company: e.target.value })}
-                placeholder="Company Name"
-                required
+              <Label className="text-stone-300">Description</Label>
+              <Textarea
+                value={formData.description || ''}
+                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                placeholder="Brief description of your role and responsibilities"
                 className="bg-stone-800 border-stone-700 text-stone-100"
+                rows={3}
               />
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -184,6 +226,40 @@ export default function EditExperienceForm({ experience }: { experience: Experie
           </CardContent>
         </Card>
 
+        {/* Technologies */}
+        <Card className="bg-stone-900/50 border-stone-800">
+          <CardHeader>
+            <CardTitle className="text-stone-100">Technologies</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="flex gap-2">
+              <Input
+                value={newTech}
+                onChange={(e) => setNewTech(e.target.value)}
+                onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); addTech(); } }}
+                placeholder="Add a technology (e.g. Python, Power BI)"
+                className="bg-stone-800 border-stone-700 text-stone-100"
+              />
+              <Button type="button" onClick={addTech} variant="outline" className="border-stone-700 text-stone-300 hover:bg-stone-800 flex-shrink-0">
+                <Plus className="w-4 h-4" />
+              </Button>
+            </div>
+            {(formData.technologies || []).length > 0 && (
+              <div className="flex flex-wrap gap-2">
+                {(formData.technologies || []).map((tech) => (
+                  <Badge key={tech} className="bg-stone-800 text-stone-200 border-stone-700 gap-1.5 pr-1.5">
+                    {tech}
+                    <button type="button" onClick={() => removeTech(tech)} className="hover:text-red-400 transition-colors">
+                      <X className="w-3 h-3" />
+                    </button>
+                  </Badge>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Achievements */}
         <Card className="bg-stone-900/50 border-stone-800">
           <CardHeader>
             <CardTitle className="text-stone-100">Achievements</CardTitle>
