@@ -124,7 +124,7 @@ export default function AboutSection({ profile, experiences }: AboutSectionProps
   const strengths = profile?.strengths || ['Problem-Solving', 'Fast Learner', 'Team Player', 'Data-Driven'];
   const stats = profile?.stats || { projectsCompleted: 12, certificationsEarned: 6, technologiesMastered: 25 };
 
-  const currentExperience = experiences.find((exp) => exp.isCurrent);
+  const currentExperience = experiences.find((exp) => exp.isCurrent) || experiences[0] || null;
 
   return (
     <section id="about" className="py-20 sm:py-32 relative overflow-hidden">

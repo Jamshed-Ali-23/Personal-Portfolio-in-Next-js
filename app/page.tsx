@@ -4,6 +4,7 @@ import HeroSection from '@/components/portfolio/HeroSection';
 import AboutSection from '@/components/portfolio/AboutSection';
 import ProjectsSection from '@/components/portfolio/ProjectsSection';
 import SkillsSection from '@/components/portfolio/SkillsSection';
+import ExperienceSection from '@/components/portfolio/ExperienceSection';
 import CertificatesSection from '@/components/portfolio/CertificatesSection';
 import ContactSection from '@/components/portfolio/ContactSection';
 import ThreeBackground from '@/components/portfolio/ThreeBackground';
@@ -87,6 +88,7 @@ export default async function Home() {
       <Suspense fallback={<LoadingFallback />}>
         <HeroSection profile={profile} />
         <AboutSection profile={profile} experiences={experiences} />
+        <ExperienceSection experiences={experiences} />
         <ProjectsSection projects={projects} />
         <SkillsSection skillCategories={skillCategories} />
         <CertificatesSection certificates={certificates} />
